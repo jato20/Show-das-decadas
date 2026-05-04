@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show das Décadas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <h1 id="titulo">Show das Décadas</h1>
+        
+        <div id="tela-selecao">
+            <p>Escolha uma era para jogar:</p>
+            <button onclick="iniciarJogo('5060')">Anos 50 e 60</button>
+            <button onclick="iniciarJogo('7080')">Anos 70 e 80</button>
+            <button onclick="iniciarJogo('9000')">Anos 90 e 00</button>
+        </div>
+
+        <div id="tela-pergunta" style="display:none;">
+            <h2 id="pergunta-texto">Pergunta aqui</h2>
+            <div id="alternativas"></div>
+            <p class="placar">Fase: <span id="fase-num">1</span>/2</p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
