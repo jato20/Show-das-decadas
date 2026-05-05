@@ -9,7 +9,7 @@ const DB = {
         { q: "Qual satélite a URSS lançou em 1957?", options: ["Apollo", "Sputnik", "Explorer", "Sojuz"], correct: 1 },
         { q: "A 'Jovem Guarda' foi em qual década?", options: ["Anos 40", "Anos 50", "Anos 60", "Anos 70"], correct: 2 },
         { q: "Atriz ícone de beleza dos anos 50:", options: ["Marilyn Monroe", "Madonna", "Cher", "Julia Roberts"], correct: 0 },
-        { q: "Em qual ano começou a construção de Brasília?", options: ["1950", "1956", "1962", "1965"], correct: 1 },
+        { q: "Em que ano começou a construção de Brasília?", options: ["1950", "1956", "1962", "1965"], correct: 1 },
         { q: "Quem cantava 'Banho de Lua'?", options: ["Celly Campello", "Rita Lee", "Elis Regina", "Gretchen"], correct: 0 },
         { q: "Festival icônico de 1969 nos EUA:", options: ["Rock in Rio", "Woodstock", "Coachella", "Lolla"], correct: 1 },
         { q: "País dividido por um muro em 1961?", options: ["Coreia", "Vietnã", "Alemanha", "Brasil"], correct: 2 },
@@ -107,18 +107,20 @@ const DB = {
     ]
 };
 
-// SALVAMENTO
+// ESTADO DO JOGO
 let save = JSON.parse(localStorage.getItem('show_save_pro')) || {
     nome: "Viajante", moedas: 0, traje: "Iniciante", inventario: ["Iniciante"],
     placar: [], stats: { jogadas: 0, ganhas: 0, perdidas: 0 }
 };
 
-let game = { decada: "", fase: 0, premio: 0, ajudas: {}, perguntasAtuais: [] };
+let game = { decada: "", fase: 0, premio: 0, perguntasAtuais: [] };
 
-// FUNÇÕES DE INTERFACE
+// NAVEGAÇÃO
 function mudarTela(id) {
     document.querySelectorAll('.tela').forEach(t => t.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+    const target = document.getElementById(id);
+    if(target) target.classList.add('active');
+    
     if(id === 'tela-stats') {
         document.getElementById('st-jogadas').innerText = save.stats.jogadas;
         document.getElementById('st-ganhas').innerText = save.stats.ganhas;
@@ -127,9 +129,15 @@ function mudarTela(id) {
     }
 }
 
+// DADOS E CARTÓRIO
 window.salvarNome = function() {
     const n = document.getElementById('novo-nome').value.trim();
-    if(n) { save.nome = n; salvarDados(); alert("Nome alterado!"); }
+    if(n) { 
+        save.nome = n; 
+        salvarDados(); 
+        alert("Nome registrado no Cartório!");
+        document.getElementById('novo-nome').value = "";
+    }
 };
 
 function salvarDados() {
@@ -139,7 +147,69 @@ function salvarDados() {
     document.getElementById('saldo-moedas').innerText = save.moedas;
 }
 
+// LÓGICA DO JOGO
 function iniciarJogo(decada) {
     save.stats.jogadas++;
     game.decada = decada;
-    game.perguntasAtuais = [...DB[decada]].sort(() => Math.random() -
+    game.perguntasAtuais = [...DB[decada]].sort(() => Math.random() - 0.5).slice(0, 10);
+    game.fase = 0; game.premio = 0;
+    mudarTela('tela-pergunta');
+    montarPergunta();
+    salvarDados();
+}
+
+function montarPergunta() {
+    const p = game.perguntasAtuais[game.fase];
+    document.getElementById('txt-pergunta').innerText = p.q;
+    document.getElementById('premio-txt').innerText = game.premio.toLocaleString();
+    const lista = document.getElementById('lista-respostas');
+    lista.innerHTML = "";
+    p.options.forEach((txt, i) => {
+        const btn = document.createElement('button');
+        btn.innerText = txt;
+        btn.onclick = () => {
+            if(i === p.correct) {
+                game.fase++; game.premio += 100000; save.moedas += 150;
+                if(game.fase < game.perguntasAtuais.length) montarPergunta(); else finalizarPartida(true);
+            } else finalizarPartida(false);
+            salvarDados();
+        };
+        lista.appendChild(btn);
+    });
+}
+
+function finalizarPartida(venceu) {
+    if(venceu) { save.stats.ganhas++; alert("PARABÉNS! VOCÊ É UM MESTRE!"); }
+    else { save.stats.perdidas++; alert("ERROU! Tente novamente."); }
+    save.placar.push({ nome: save.nome, pontos: game.premio });
+    save.placar.sort((a,b) => b.pontos - a.pontos);
+    save.placar = save.placar.slice(0, 5);
+    salvarDados();
+    mudarTela('tela-menu');
+}
+
+window.comprar = function(nome, preco) {
+    if(save.inventario.includes(nome)) { save.traje = nome; alert("Estilo " + nome + " equipado!"); }
+    else if(save.moedas >= preco) {
+        save.moedas -= preco; save.inventario.push(nome); save.traje = nome;
+        alert("Novo traje adquirido!");
+    } else alert("Moedas insuficientes!");
+    salvarDados();
+}
+
+function renderizarRanking() {
+    document.getElementById('placar-lideres').innerHTML = save.placar.map(p => 
+        `<div style="display:flex; justify-content:space-between; margin-bottom:5px; border-bottom: 1px solid #444;">
+            <span>${p.nome}</span><span>R$ ${p.pontos.toLocaleString()}</span>
+        </div>`
+    ).join('') || "Sem recordes.";
+}
+
+// INICIALIZAÇÃO
+document.addEventListener('DOMContentLoaded', () => {
+    salvarDados();
+    document.querySelectorAll('.btn-decada').forEach(b => b.onclick = () => iniciarJogo(b.dataset.decada));
+    document.getElementById('btn-loja').onclick = () => mudarTela('tela-loja');
+    document.getElementById('btn-stats').onclick = () => mudarTela('tela-stats');
+    document.querySelectorAll('.btn-voltar').forEach(b => b.onclick = () => mudarTela('tela-menu'));
+});
