@@ -1,5 +1,4 @@
-// BANCO DE PERGUNTAS (Mantendo as mesmas que você já tem)
-const perguntas = {
+const bancoPerguntas = {
     '5060': [
         { q: "Quem era o Rei do Rock nos anos 50?", options: ["Elvis Presley", "Beatles", "Nirvana", "Pelé"], correct: 0 },
         { q: "Em que ano o homem pisou na Lua?", options: ["1950", "1969", "1975", "1945"], correct: 1 },
@@ -25,7 +24,7 @@ const perguntas = {
         { q: "Quem foi o Rei do Baião?", options: ["Luiz Gonzaga", "Dominguinhos", "Gilberto Gil", "Caetano"], correct: 0 },
         { q: "Qual brinquedo foi lançado em 1959 pela Mattel?", options: ["Barbie", "Lego", "Max Steel", "Hot Wheels"], correct: 0 },
         { q: "Qual filme ganhou o primeiro Oscar de 1950?", options: ["A Malvada", "Cinderela", "Ben-Hur", "Casablanca"], correct: 0 },
-        { q: "País que sediou a Copa de 1950:", options: ["Brasil", "Uruguai", "Itália", "França"], correct: 0 },
+        { q: "País que sediou a Copa de 1950?", options: ["Brasil", "Uruguai", "Itália", "França"], correct: 0 },
         { q: "Qual o nome da TV inaugurada em 1950?", options: ["Globo", "Record", "Tupi", "SBT"], correct: 2 },
         { q: "Quem foi o sucessor de Getúlio Vargas em 1954?", options: ["Café Filho", "JK", "Jânio", "Dutra"], correct: 0 },
         { q: "Em que ano terminou a Guerra da Coreia?", options: ["1950", "1953", "1955", "1960"], correct: 1 },
@@ -108,143 +107,135 @@ const perguntas = {
     ]
 };
 
-// ESTADO DO JOGO
-let faseAtual = 0;
-let decadaSelecionada = "";
-let premioTotal = 0;
+// --- LOGICA DO JOGO ---
+let jogador = { 
+    nome: "", 
+    traje: "", 
+    conquistas: JSON.parse(localStorage.getItem('conquistas_show')) || {r50:false, r70:false, r90:false} 
+};
+let fase = 0, decada = "", premio = 0;
 let ajudas = { cartas: true, univ: true, pulo: true };
-let dadosJogador = {
-    nome: "",
-    traje: "Iniciante",
-    conquistas: { r50: false, r70: false, r90: false }
-};
 
-// CARREGAR DADOS AO ABRIR
-window.onload = () => {
-    const salvo = localStorage.getItem('showDecadasConquistas');
-    if (salvo) {
-        dadosJogador.conquistas = JSON.parse(salvo);
-    }
-    atualizarLoja();
-};
+// Inicia quando o site carregar
+document.addEventListener('DOMContentLoaded', () => {
+    // Desbloqueia roupas salvas
+    if(jogador.conquistas.r50) document.getElementById('traje-50').disabled = false;
+    if(jogador.conquistas.r70) document.getElementById('traje-70').disabled = false;
+    if(jogador.conquistas.r90) document.getElementById('traje-90').disabled = false;
 
-function atualizarLoja() {
-    const t50 = document.getElementById('traje-50');
-    const t70 = document.getElementById('traje-70');
-    const t90 = document.getElementById('traje-90');
-    
-    if(t50) t50.disabled = !dadosJogador.conquistas.r50;
-    if(t70) t70.disabled = !dadosJogador.conquistas.r70;
-    if(t90) t90.disabled = !dadosJogador.conquistas.r90;
-}
+    // Clique do botão Salvar
+    document.getElementById('btn-salvar').addEventListener('click', () => {
+        jogador.nome = document.getElementById('input-nome').value.trim() || "Jogador";
+        jogador.traje = document.getElementById('select-traje').value;
 
-// FUNÇÃO DO BOTÃO QUE ESTAVA TRAVANDO
-function irParaSelecao() {
-    const inputNome = document.getElementById('input-nome');
-    const selectTraje = document.getElementById('select-traje');
-    
-    if(!inputNome || !selectTraje) return; // Segurança caso o HTML mude
+        document.getElementById('boas-vindas').innerText = "Olá, " + jogador.nome + "!";
+        document.getElementById('tela-perfil').style.display = 'none';
+        document.getElementById('tela-selecao').style.display = 'block';
+    });
 
-    dadosJogador.nome = inputNome.value.trim() || "Jogador";
-    dadosJogador.traje = selectTraje.value;
-    
-    document.getElementById('boas-vindas').innerText = `Olá, ${dadosJogador.nome}!`;
-    document.getElementById('tela-perfil').style.display = 'none';
-    document.getElementById('tela-selecao').style.display = 'block';
-}
+    // Clique nas Décadas
+    document.querySelectorAll('.btn-decada').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            decada = e.target.getAttribute('data-decada');
+            iniciarJogo();
+        });
+    });
 
-function iniciarJogo(decada) {
-    document.body.className = 'tema-' + decada;
-    decadaSelecionada = decada;
-    faseAtual = 0;
-    premioTotal = 0;
+    // Clique nas Ajudas
+    document.getElementById('btn-cartas').addEventListener('click', ajudaCartas);
+    document.getElementById('btn-univ').addEventListener('click', ajudaUniv);
+    document.getElementById('btn-pular').addEventListener('click', ajudaPular);
+});
+
+function iniciarJogo() {
+    fase = 0; premio = 0;
     ajudas = { cartas: true, univ: true, pulo: true };
     
-    document.getElementById('player-tag').innerText = dadosJogador.nome;
-    document.getElementById('traje-tag').innerText = "Traje: " + dadosJogador.traje;
+    document.body.className = "tema-" + decada;
+    document.getElementById('display-nome').innerText = jogador.nome;
+    document.getElementById('display-traje').innerText = "Traje: " + jogador.traje;
     
-    document.getElementById('btn-cartas').disabled = false;
-    document.getElementById('btn-universitarios').disabled = false;
-    document.getElementById('btn-pular').disabled = false;
-    
-    perguntas[decadaSelecionada].sort(() => Math.random() - 0.5);
+    document.querySelectorAll('.btn-ajuda').forEach(b => b.disabled = false);
     
     document.getElementById('tela-selecao').style.display = 'none';
     document.getElementById('tela-pergunta').style.display = 'block';
-    mostrarPergunta();
+    
+    // Embaralha as perguntas da década escolhida
+    bancoPerguntas[decada].sort(() => Math.random() - 0.5);
+    carregarPergunta();
 }
 
-function mostrarPergunta() {
-    let dados = perguntas[decadaSelecionada][faseAtual];
-    document.getElementById('pergunta-texto').innerText = dados.q;
-    document.getElementById('valor-premio').innerText = premioTotal.toLocaleString('pt-BR');
+function carregarPergunta() {
+    const p = bancoPerguntas[decada][fase];
+    document.getElementById('pergunta-texto').innerText = p.q;
+    document.getElementById('valor-premio').innerText = premio.toLocaleString();
     
-    let div = document.getElementById('alternativas');
-    div.innerHTML = "";
-    dados.options.forEach((opt, index) => {
-        let btn = document.createElement('button');
-        btn.innerText = opt;
-        btn.id = "opt-" + index;
-        btn.onclick = () => verificarResposta(index);
-        div.appendChild(btn);
+    const containerAlt = document.getElementById('alternativas');
+    containerAlt.innerHTML = "";
+
+    p.options.forEach((txt, i) => {
+        const b = document.createElement('button');
+        b.innerText = txt;
+        b.id = "opt-" + i;
+        b.onclick = () => verificarResposta(i);
+        containerAlt.appendChild(b);
     });
 }
 
-function verificarResposta(escolha) {
-    let correta = perguntas[decadaSelecionada][faseAtual].correct;
-    if (escolha === correta) {
-        faseAtual++;
-        premioTotal += 50000;
-        if (faseAtual < perguntas[decadaSelecionada].length) {
+function verificarResposta(idx) {
+    if(idx === bancoPerguntas[decada][fase].correct) {
+        fase++;
+        premio += 50000;
+        if(fase < bancoPerguntas[decada].length) {
             alert("CERTA RESPOSTA!");
-            mostrarPergunta();
+            carregarPergunta();
         } else {
-            vitoriaFinal();
+            ganhar();
         }
     } else {
-        alert("ERRADO! Você perdeu.");
+        alert("RESPOSTA ERRADA! Você perdeu tudo.");
         location.reload();
     }
 }
 
-function vitoriaFinal() {
-    alert(`PARABÉNS ${dadosJogador.nome}! Você venceu e desbloqueou um novo traje!`);
+function ganhar() {
+    alert("PARABÉNS! Você venceu esta década!");
+    if(decada === '5060') jogador.conquistas.r50 = true;
+    if(decada === '7080') jogador.conquistas.r70 = true;
+    if(decada === '9000') jogador.conquistas.r90 = true;
     
-    if (decadaSelecionada === '5060') dadosJogador.conquistas.r50 = true;
-    if (decadaSelecionada === '7080') dadosJogador.conquistas.r70 = true;
-    if (decadaSelecionada === '9000') dadosJogador.conquistas.r90 = true;
-    
-    localStorage.setItem('showDecadasConquistas', JSON.stringify(dadosJogador.conquistas));
+    localStorage.setItem('conquistas_show', JSON.stringify(jogador.conquistas));
     location.reload();
 }
 
 function ajudaCartas() {
-    if (!ajudas.cartas) return;
+    if(!ajudas.cartas) return;
     ajudas.cartas = false;
     document.getElementById('btn-cartas').disabled = true;
-    let correta = perguntas[decadaSelecionada][faseAtual].correct;
-    let eliminados = 0;
+    const correta = bancoPerguntas[decada][fase].correct;
+    let removidos = 0;
     [0,1,2,3].sort(()=>Math.random()-0.5).forEach(i => {
-        if(i !== correta && eliminados < 2) {
+        if(i !== correta && removidos < 2) {
             document.getElementById("opt-"+i).style.visibility = "hidden";
-            eliminados++;
+            removidos++;
         }
     });
 }
 
-function ajudaUniversitarios() {
-    if (!ajudas.univ) return;
+function ajudaUniv() {
+    if(!ajudas.univ) return;
     ajudas.univ = false;
-    document.getElementById('btn-universitarios').disabled = true;
-    let correta = perguntas[decadaSelecionada][faseAtual].correct;
-    let resp = Math.random() < 0.7 ? perguntas[decadaSelecionada][faseAtual].options[correta] : "Difícil dizer...";
-    alert("Os Universitários acham que é: " + resp);
+    document.getElementById('btn-univ').disabled = true;
+    const corretaIdx = bancoPerguntas[decada][fase].correct;
+    const sugestao = bancoPerguntas[decada][fase].options[corretaIdx];
+    alert("Os universitários acham que é: " + sugestao);
 }
 
 function ajudaPular() {
-    if (!ajudas.pulo) return;
+    if(!ajudas.pulo) return;
     ajudas.pulo = false;
     document.getElementById('btn-pular').disabled = true;
-    faseAtual++;
-    mostrarPergunta();
+    fase++;
+    if(fase < bancoPerguntas[decada].length) carregarPergunta();
+    else ganhar();
 }
