@@ -8,62 +8,44 @@
 </head>
 <body>
     <div id="game-container">
-        <div id="header-perfil">
-            <div class="user-data">
-                <span id="nome-perfil">Viajante</span>
+        <div id="tela-login" class="tela active">
+            <h1>Show das Décadas</h1>
+            <div class="box-login">
+                <p>Bem-vindo! Digite seu nome para começar:</p>
+                <input type="text" id="input-nome-inicial" placeholder="Seu nome aqui...">
+                <button id="btn-entrar" onclick="entrarNoJogo()">ENTRAR NO JOGO</button>
             </div>
-            <div class="moedas-total">🪙 <span id="saldo-moedas">0</span></div>
         </div>
 
-        <div id="tela-menu" class="tela active">
-            <h1>Show das Décadas</h1>
-            
-            <div class="box-entrada-nome">
-                <p>✍️ Seu Nome:</p>
-                <div style="display: flex; gap: 8px; margin-top: 8px;">
-                    <input type="text" id="menu-nome" placeholder="Digite seu nome...">
-                    <button onclick="salvarNomeMenu()" style="width: auto; background: #28a745 !important; margin:0; padding: 0 20px; color: white;">OK</button>
-                </div>
+        <div id="tela-menu" class="tela">
+            <div id="header-perfil">
+                <div>Olá, <b id="nome-perfil">Viajante</b></div>
+                <div>🪙 <span id="saldo-moedas">0</span></div>
             </div>
-
-            <p style="margin-top: 20px;">Escolha uma época para jogar:</p>
-            <button class="btn-decada" data-decada="5060">Anos 50 e 60</button>
-            <button class="btn-decada" data-decada="7080">Anos 70 e 80</button>
-            <button class="btn-decada" data-decada="9000">Anos 90 e 00</button>
+            
+            <p style="margin: 20px 0;">Escolha uma época:</p>
+            <button onclick="iniciarJogo('5060')">Anos 50 e 60</button>
+            <button onclick="iniciarJogo('7080')">Anos 70 e 80</button>
+            <button onclick="iniciarJogo('9000')">Anos 90 e 00</button>
             
             <hr>
-            
             <div style="display: flex; gap: 10px;">
-                <button id="btn-loja" style="background: #ff8c00 !important; color: white;">🛒 Loja</button>
-                <button id="btn-stats" style="background: #00aaff !important; color: white;">🏆 Stats</button>
+                <button onclick="mudarTela('tela-stats')" style="background: #00aaff !important;">🏆 Stats</button>
+                <button onclick="sairJogo()" style="background: #666 !important;">Sair</button>
             </div>
-        </div>
-
-        <div id="tela-loja" class="tela">
-            <h2>🛒 Loja de Estilos</h2>
-            <div class="item-loja"><span>🕺 Anos 50 (500 moedas)</span><button onclick="comprar('Anos 50', 500)">Comprar</button></div>
-            <div class="item-loja"><span>🌈 Anos 70 (1000 moedas)</span><button onclick="comprar('Anos 70', 1000)">Comprar</button></div>
-            <div class="item-loja"><span>🕶️ Anos 90 (1500 moedas)</span><button onclick="comprar('Anos 90', 1500)">Comprar</button></div>
-            <button class="btn-voltar" style="background: #666 !important; color: white;">⬅ Voltar</button>
         </div>
 
         <div id="tela-stats" class="tela">
-            <h2>📊 Seu Desempenho</h2>
-            <div class="box-stats">
-                <p>🎮 Partidas: <span id="st-jogadas">0</span></p>
-                <p>✅ Vitórias: <span id="st-ganhas">0</span></p>
-                <p>❌ Derrotas: <span id="st-perdidas">0</span></p>
-            </div>
-            <h2 style="margin-top: 15px;">🥇 Top 5 Recordes</h2>
+            <h2>🏆 Recordes</h2>
             <div id="placar-lideres" class="box-stats"></div>
-            <button class="btn-voltar" style="background: #666 !important; color: white;">⬅ Voltar</button>
+            <button onclick="mudarTela('tela-menu')">⬅ Voltar</button>
         </div>
 
         <div id="tela-pergunta" class="tela">
             <div class="status-jogo">Prêmio: R$ <b id="premio-txt">0</b></div>
             <h3 id="txt-pergunta"></h3>
             <div id="lista-respostas"></div>
-            <button onclick="finalizarPartida(false)" style="background: #cc0000 !important; color: #fff; margin-top: 20px;">Desistir</button>
+            <button onclick="mudarTela('tela-menu')" style="background: #cc0000 !important; color: #fff;">Desistir</button>
         </div>
     </div>
     <script src="script.js"></script>
