@@ -1,75 +1,25 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Show das Décadas Pro</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div id="game-container">
-        <div id="header-perfil" onclick="abrirPerfil()">
-            <div class="user-data">
-                <span id="nome-perfil">Viajante</span> <br>
-                <small id="traje-perfil">👕 Iniciante</small>
-            </div>
-            <div class="moedas-total">🪙 <span id="saldo-moedas">0</span></div>
-        </div>
-
-        <div id="tela-menu" class="tela active">
-            <h1>Show das Décadas</h1>
-            <p>Escolha uma época para jogar:</p>
-            <button class="btn-decada" data-decada="5060">Anos 50 e 60</button>
-            <button class="btn-decada" data-decada="7080">Anos 70 e 80</button>
-            <button class="btn-decada" data-decada="9000">Anos 90 e 00</button>
-            <hr>
-            <div style="display: flex; gap: 10px;">
-                <button id="btn-loja" style="background: #ff8c00;">🛒 Loja</button>
-                <button id="btn-stats" style="background: #00aaff;">🏆 Ranking</button>
-            </div>
-        </div>
-
-        <div id="modal-perfil" class="modal">
-            <div class="modal-content">
-                <h2>Seu Perfil</h2>
-                <div id="stats-detalhado">
-                    <p>🎮 Partidas Jogadas: <span id="st-jogadas">0</span></p>
-                    <p>✅ Partidas Ganhas: <span id="st-ganhas">0</span></p>
-                    <p>❌ Partidas Perdidas: <span id="st-perdidas">0</span></p>
-                </div>
-                <hr>
-                <input type="text" id="novo-nome" placeholder="Novo nome...">
-                <button onclick="salvarNome()" style="background: #28a745; color: white;">Salvar Nome</button>
-                <button onclick="fecharPerfil()" class="btn-voltar">Fechar</button>
-            </div>
-        </div>
-
-        <div id="tela-loja" class="tela">
-            <h2>Loja de Trajes</h2>
-            <div class="item-loja"><p>🕺 Anos 50 (500 moedas)</p><button onclick="comprar('Anos 50', 500)">Comprar</button></div>
-            <div class="item-loja"><p>🌈 Anos 70 (1000 moedas)</p><button onclick="comprar('Anos 70', 1000)">Comprar</button></div>
-            <div class="item-loja"><p>🕶️ Anos 90 (1500 moedas)</p><button onclick="comprar('Anos 90', 1500)">Comprar</button></div>
-            <button class="btn-voltar">⬅ Voltar</button>
-        </div>
-
-        <div id="tela-stats" class="tela">
-            <h2>🥇 Top 5 Recordes</h2>
-            <div id="placar-lideres" class="box-stats"></div>
-            <button class="btn-voltar">⬅ Voltar</button>
-        </div>
-
-        <div id="tela-pergunta" class="tela">
-            <div class="status-jogo">R$ <b id="premio-txt">0</b></div>
-            <h3 id="txt-pergunta"></h3>
-            <div id="lista-respostas"></div>
-            <div class="controles-ajuda">
-                <button id="ajuda-cartas">🃏 Cartas</button>
-                <button id="ajuda-univ">🎓 Univ.</button>
-                <button id="ajuda-pulo">⏭️ Pulo</button>
-            </div>
-            <button onclick="finalizarPartida(false)" style="background: #cc0000; color: #fff;">Desistir</button>
-        </div>
+<div id="tela-loja" class="tela">
+    <h2>🛒 Loja e Cartório</h2>
+    <div class="item-loja">
+        <input type="text" id="novo-nome" placeholder="Novo nome..." style="width: 60%; margin: 0;">
+        <button onclick="salvarNome()" style="width: auto; background: #28a745;">Mudar Nome</button>
     </div>
-    <script src="script.js"></script>
-</body>
-</html>
+    <hr>
+    <div class="item-loja"><p>🕺 Anos 50 (500 moedas)</p><button onclick="comprar('Anos 50', 500)">Comprar</button></div>
+    <div class="item-loja"><p>🌈 Anos 70 (1000 moedas)</p><button onclick="comprar('Anos 70', 1000)">Comprar</button></div>
+    <div class="item-loja"><p>🕶️ Anos 90 (1500 moedas)</p><button onclick="comprar('Anos 90', 1500)">Comprar</button></div>
+    <button class="btn-voltar">⬅ Voltar</button>
+</div>
+
+<div id="tela-stats" class="tela">
+    <h2>🏆 Seu Desempenho</h2>
+    <div class="box-stats" style="margin-bottom: 15px; border: 1px solid #ffd700;">
+        <p>🎮 Total de Partidas: <span id="st-jogadas">0</span></p>
+        <p>✅ Vitórias: <span id="st-ganhas">0</span></p>
+        <p>❌ Derrotas: <span id="st-perdidas">0</span></p>
+    </div>
+    
+    <h2>🥇 Top 5 Recordes</h2>
+    <div id="placar-lideres" class="box-stats"></div>
+    <button class="btn-voltar">⬅ Voltar</button>
+</div>
