@@ -141,10 +141,12 @@ function salvarDados() {
 }
 
 function iniciarJogo(decada) {
+    if(!DB[decada]) return;
     save.stats.jogadas++;
     game.decada = decada;
     game.perguntasAtuais = [...DB[decada]].sort(() => Math.random() - 0.5).slice(0, 10);
-    game.fase = 0; game.premio = 0;
+    game.fase = 0; 
+    game.premio = 0;
     mudarTela('tela-pergunta');
     montarPergunta();
     salvarDados();
@@ -190,8 +192,14 @@ function renderizarRanking() {
 
 document.addEventListener('DOMContentLoaded', () => {
     salvarDados();
-    document.querySelectorAll('.btn-decada').forEach(b => b.onclick = () => iniciarJogo(b.dataset.decada));
+    // Ativação dos botões de década
+    document.querySelectorAll('.btn-decada').forEach(b => {
+        b.onclick = () => iniciarJogo(b.dataset.decada);
+    });
+    // Ativação dos botões de navegação
     document.getElementById('btn-loja').onclick = () => mudarTela('tela-loja');
     document.getElementById('btn-stats').onclick = () => mudarTela('tela-stats');
-    document.querySelectorAll('.btn-voltar').forEach(b => b.onclick = () => mudarTela('tela-menu'));
+    document.querySelectorAll('.btn-voltar').forEach(b => {
+        b.onclick = () => mudarTela('tela-menu');
+    });
 });
