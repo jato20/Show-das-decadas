@@ -1,3 +1,4 @@
+// BANCO DE DADOS - 17 PERGUNTAS POR DÉCADA
 const DB = {
     '5060': [
         { q: "Quem era o Rei do Rock nos anos 50?", options: ["Elvis Presley", "Beatles", "Nirvana", "Pelé"], correct: 0 },
@@ -58,35 +59,45 @@ const DB = {
     ]
 };
 
-// --- LÓGICA DO JOGO ---
-let save = JSON.parse(localStorage.getItem('show_save_pro')) || { nome: "", moedas: 0, placar: [] };
+// VARIAVEIS GLOBAIS
+let save = JSON.parse(localStorage.getItem('show_save_v3')) || { nome: "", moedas: 0, placar: [] };
 let game = { decada: "", fase: 0, premio: 0, perguntasAtuais: [] };
 
-function mudarTela(id) {
+// FUNÇÃO PARA MUDAR TELA
+window.mudarTela = function(id) {
+    console.log("Mudando para a tela: " + id);
     document.querySelectorAll('.tela').forEach(t => t.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+    const proxima = document.getElementById(id);
+    if(proxima) {
+        proxima.classList.add('active');
+    }
     if(id === 'tela-stats') renderizarRanking();
-}
+};
 
+// FUNÇÃO ENTRAR (O seu botão chama essa!)
 window.entrarNoJogo = function() {
-    const n = document.getElementById('input-nome-inicial').value.trim();
-    if(n.length < 2) { alert("Digite um nome!"); return; }
-    save.nome = n;
+    const nomeInput = document.getElementById('input-nome-inicial').value.trim();
+    if(nomeInput.length < 2) {
+        alert("Por favor, digite seu nome!");
+        return;
+    }
+    save.nome = nomeInput;
     salvarDados();
-    mudarTela('tela-menu');
+    window.mudarTela('tela-menu');
 };
 
 function salvarDados() {
-    localStorage.setItem('show_save_pro', JSON.stringify(save));
-    document.getElementById('nome-perfil').innerText = save.nome;
-    document.getElementById('saldo-moedas').innerText = save.moedas;
+    localStorage.setItem('show_save_v3', JSON.stringify(save));
+    if(document.getElementById('nome-perfil')) document.getElementById('nome-perfil').innerText = save.nome;
+    if(document.getElementById('saldo-moedas')) document.getElementById('saldo-moedas').innerText = save.moedas;
 }
 
 window.iniciarJogo = function(decada) {
     game.decada = decada;
     game.perguntasAtuais = [...DB[decada]].sort(() => Math.random() - 0.5).slice(0, 10);
-    game.fase = 0; game.premio = 0;
-    mudarTela('tela-pergunta');
+    game.fase = 0; 
+    game.premio = 0;
+    window.mudarTela('tela-pergunta');
     montarPergunta();
 };
 
@@ -101,9 +112,13 @@ function montarPergunta() {
         btn.innerText = txt;
         btn.onclick = () => {
             if(i === p.correct) {
-                game.fase++; game.premio += 100000; save.moedas += 150;
+                game.fase++; 
+                game.premio += 100000; 
+                save.moedas += 150;
                 if(game.fase < game.perguntasAtuais.length) montarPergunta(); else finalizar(true);
-            } else { finalizar(false); }
+            } else { 
+                finalizar(false); 
+            }
             salvarDados();
         };
         lista.appendChild(btn);
@@ -116,21 +131,29 @@ function finalizar(venceu) {
     save.placar.sort((a,b) => b.pontos - a.pontos);
     save.placar = save.placar.slice(0, 5);
     salvarDados();
-    mudarTela('tela-menu');
+    window.mudarTela('tela-menu');
 }
 
 function renderizarRanking() {
-    document.getElementById('placar-lideres').innerHTML = save.placar.map(p => 
-        `<div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #444;">
-            <span>${p.nome}</span><span>R$ ${p.pontos.toLocaleString()}</span>
-        </div>`
-    ).join('') || "Sem recordes.";
+    const container = document.getElementById('placar-lideres');
+    if(container) {
+        container.innerHTML = save.placar.map(p => 
+            `<div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #444;">
+                <span>${p.nome}</span><span>R$ ${p.pontos.toLocaleString()}</span>
+            </div>`
+        ).join('') || "Sem recordes.";
+    }
 }
 
 window.sairJogo = function() {
     save.nome = "";
-    mudarTela('tela-login');
+    window.mudarTela('tela-login');
 };
 
-if(save.nome) mudarTela('tela-menu');
-salvarDados();
+// AO CARREGAR A PÁGINA
+window.onload = () => {
+    salvarDados();
+    if(save.nome) {
+        window.mudarTela('tela-menu');
+    }
+};
