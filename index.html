@@ -17,27 +17,33 @@
 
         <div id="tela-menu" class="tela active">
             <h1>Show das Décadas</h1>
-            <p>Escolha uma década para começar:</p>
+            
+            <div class="box-entrada-nome">
+                <p>✍️ Seu Nome:</p>
+                <div style="display: flex; gap: 8px; margin-top: 8px;">
+                    <input type="text" id="menu-nome" placeholder="Digite seu nome...">
+                    <button onclick="salvarNomeMenu()" style="width: auto; background: #28a745 !important; margin:0; padding: 0 20px; color: white;">OK</button>
+                </div>
+            </div>
+
+            <p style="margin-top: 20px;">Escolha uma época para jogar:</p>
             <button class="btn-decada" data-decada="5060">Anos 50 e 60</button>
             <button class="btn-decada" data-decada="7080">Anos 70 e 80</button>
             <button class="btn-decada" data-decada="9000">Anos 90 e 00</button>
+            
             <hr>
+            
             <div style="display: flex; gap: 10px;">
-                <button id="btn-loja" style="background: #ff8c00 !important; color: white;">✍️ Mudar Nome</button>
+                <button id="btn-loja" style="background: #ff8c00 !important; color: white;">🛒 Loja</button>
                 <button id="btn-stats" style="background: #00aaff !important; color: white;">🏆 Stats</button>
             </div>
         </div>
 
         <div id="tela-loja" class="tela">
-            <h2>✍️ Cartório</h2>
-            <div class="box-loja">
-                <p>Digite seu novo nome abaixo:</p>
-                <div style="display: flex; gap: 5px; margin-top: 10px;">
-                    <input type="text" id="novo-nome" placeholder="Ex: Mestre do Quiz">
-                    <button onclick="salvarNome()" style="width: auto; background: #28a745 !important; margin:0; padding: 5px 15px; color: white;">OK</button>
-                </div>
-            </div>
-            <p style="font-size: 0.8rem; margin-top: 15px; opacity: 0.7;">O nome será exibido no Ranking Global.</p>
+            <h2>🛒 Loja de Estilos</h2>
+            <div class="item-loja"><span>🕺 Anos 50 (500 moedas)</span><button onclick="comprar('Anos 50', 500)">Comprar</button></div>
+            <div class="item-loja"><span>🌈 Anos 70 (1000 moedas)</span><button onclick="comprar('Anos 70', 1000)">Comprar</button></div>
+            <div class="item-loja"><span>🕶️ Anos 90 (1500 moedas)</span><button onclick="comprar('Anos 90', 1500)">Comprar</button></div>
             <button class="btn-voltar" style="background: #666 !important; color: white;">⬅ Voltar</button>
         </div>
 
