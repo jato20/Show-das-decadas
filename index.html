@@ -11,7 +11,7 @@
         <div id="tela-perfil" class="tela active">
             <h1>Show das Décadas</h1>
             <div class="box">
-                <input type="text" id="input-nome" placeholder="Digite seu nome...">
+                <input type="text" id="input-nome" placeholder="Seu nome...">
                 <select id="select-traje">
                     <option value="Iniciante">👕 Iniciante</option>
                     <option value="Anos 50" id="traje-50" disabled>🕺 Anos 50 (Bloqueado)</option>
@@ -19,12 +19,12 @@
                     <option value="Anos 90" id="traje-90" disabled>🕶️ Anos 90 (Bloqueado)</option>
                 </select>
             </div>
-            <button id="btn-salvar" class="btn-principal">Começar Jornada</button>
+            <button id="btn-salvar">Salvar e Continuar</button>
         </div>
 
         <div id="tela-selecao" class="tela">
             <h2 id="boas-vindas"></h2>
-            <p>Escolha o período:</p>
+            <p>Escolha uma década:</p>
             <button class="btn-decada" data-decada="5060">Anos 50 e 60</button>
             <button class="btn-decada" data-decada="7080">Anos 70 e 80</button>
             <button class="btn-decada" data-decada="9000">Anos 90 e 00</button>
@@ -33,14 +33,12 @@
         <div id="tela-pergunta" class="tela">
             <div class="header-jogo">
                 <div class="player-info">
-                    <span id="nome-p"></span> | <small id="traje-p"></small>
+                    <b id="nome-p"></b> | <small id="traje-p"></small>
                 </div>
                 <div class="money">R$ <span id="premio-txt">0</span></div>
             </div>
-            <div id="caixa-pergunta">
-                <h2 id="txt-pergunta"></h2>
-                <div id="lista-respostas"></div>
-            </div>
+            <h2 id="txt-pergunta"></h2>
+            <div id="lista-respostas"></div>
             <div class="controles-ajuda">
                 <button id="ajuda-cartas">🃏 Cartas</button>
                 <button id="ajuda-univ">🎓 Univ.</button>
