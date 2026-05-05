@@ -107,7 +107,6 @@ const DB = {
     ]
 };
 
-// --- ESTADO INICIAL ---
 let save = JSON.parse(localStorage.getItem('show_save_pro')) || {
     moedas: 0, traje: "Iniciante", inventario: ["Iniciante"],
     conquistas: { d50: false, d70: false, d90: false }, placar: []
@@ -119,7 +118,7 @@ let game = {
     perguntasAtuais: [] 
 };
 
-// --- FUNÇÃO DE EMBARALHAR ---
+// Funções Utilitárias
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -134,74 +133,62 @@ function mudarTela(id) {
     if(id === 'tela-stats') renderizarStats();
 }
 
-// --- FUNÇÕES DE INICIALIZAÇÃO ---
-function iniciarSistema() {
-    // BOTÃO ENTRAR
-    const btnEntrar = document.getElementById('btn-entrar');
-    if (btnEntrar) {
-        btnEntrar.onclick = () => {
-            const nomeInput = document.getElementById('input-nome').value;
-            game.nome = nomeInput.trim() || "Viajante";
-            atualizarUIHeader();
-            document.getElementById('header-perfil').classList.remove('hidden');
-            mudarTela('tela-menu');
-        };
-    }
+// Funções Principais
+function fazerLogin() {
+    const input = document.getElementById('input-nome');
+    game.nome = input.value.trim() || "Viajante";
+    document.getElementById('nome-perfil').innerText = game.nome;
+    document.getElementById('header-perfil').classList.remove('hidden');
+    mudarTela('tela-menu');
+    atualizarUIHeader();
+}
 
-    // BOTÕES DE NAVEGAÇÃO
-    document.getElementById('btn-loja').onclick = () => mudarTela('tela-loja');
-    document.getElementById('btn-stats').onclick = () => mudarTela('tela-stats');
-    document.querySelectorAll('.btn-voltar').forEach(b => b.onclick = () => mudarTela('tela-menu'));
-
-    // SELEÇÃO DE DÉCADA
-    document.querySelectorAll('.btn-decada').forEach(btn => {
-        btn.onclick = () => {
-            const decadaKey = btn.getAttribute('data-decada');
-            game.decada = decadaKey;
-            
-            // Embaralha Perguntas
-            game.perguntasAtuais = shuffle([...DB[decadaKey]]);
-            
-            // Embaralha Opções
-            game.perguntasAtuais.forEach(p => {
-                let rCorretaTexto = p.options[p.correct];
-                shuffle(p.options);
-                p.correct = p.options.indexOf(rCorretaTexto);
-            });
-
-            game.fase = 0; game.premio = 0;
-            game.ajudas = { cartas: true, univ: true, pulo: true };
-            resetAjudas();
-            mudarTela('tela-pergunta');
-            montarPergunta();
-        };
+function iniciarDecada(decadaKey) {
+    game.decada = decadaKey;
+    // Clona e embaralha perguntas
+    game.perguntasAtuais = shuffle([...DB[decadaKey]]);
+    
+    // Embaralha alternativas de cada pergunta
+    game.perguntasAtuais.forEach(p => {
+        let textoCorreto = p.options[p.correct];
+        shuffle(p.options);
+        p.correct = p.options.indexOf(textoCorreto);
     });
 
-    // AJUDAS
-    document.getElementById('ajuda-cartas').onclick = usarCartas;
-    document.getElementById('ajuda-univ').onclick = usarUniv;
-    document.getElementById('ajuda-pulo').onclick = usarPulo;
+    game.fase = 0; game.premio = 0;
+    game.ajudas = { cartas: true, univ: true, pulo: true };
+    
+    document.getElementById('ajuda-cartas').disabled = false;
+    document.getElementById('ajuda-univ').disabled = false;
+    document.getElementById('ajuda-pulo').disabled = false;
+
+    mudarTela('tela-pergunta');
+    montarPergunta();
 }
 
 function montarPergunta() {
     const p = game.perguntasAtuais[game.fase];
     document.getElementById('txt-pergunta').innerText = p.q;
     document.getElementById('premio-txt').innerText = game.premio.toLocaleString();
+    
     const lista = document.getElementById('lista-respostas');
     lista.innerHTML = "";
     
     p.options.forEach((txt, i) => {
         const btn = document.createElement('button');
         btn.innerText = txt;
-        btn.style.visibility = "visible";
         btn.onclick = () => {
             if(i === p.correct) {
-                game.fase++; game.premio += 50000; save.moedas += 100;
-                salvarDados();
+                game.fase++; 
+                game.premio += 50000; 
+                save.moedas += 100;
+                localStorage.setItem('show_save_pro', JSON.stringify(save));
+                atualizarUIHeader();
+                
                 if(game.fase < game.perguntasAtuais.length) montarPergunta();
                 else finalizarPartida(true);
             } else { 
-                alert("Errou! Fim de jogo."); 
+                alert("Resposta Errada! Você perdeu tudo."); 
                 finalizarPartida(false); 
             }
         };
@@ -209,54 +196,65 @@ function montarPergunta() {
     });
 }
 
-function usarCartas() {
-    if(!game.ajudas.cartas) return;
-    game.ajudas.cartas = false;
-    document.getElementById('ajuda-cartas').disabled = true;
-    let p = game.perguntasAtuais[game.fase];
-    let btns = document.getElementById('lista-respostas').children;
-    let sumidos = 0;
-    for(let i=0; i<4; i++) {
-        if(i !== p.correct && sumidos < 2) { 
-            btns[i].style.visibility = "hidden"; 
-            sumidos++; 
+// Event Listeners (Configurados no carregamento)
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.btn-decada').forEach(btn => {
+        btn.onclick = () => iniciarDecada(btn.getAttribute('data-decada'));
+    });
+    
+    document.getElementById('btn-loja').onclick = () => mudarTela('tela-loja');
+    document.getElementById('btn-stats').onclick = () => mudarTela('tela-stats');
+    document.querySelectorAll('.btn-voltar').forEach(b => b.onclick = () => mudarTela('tela-menu'));
+
+    // Ajudas
+    document.getElementById('ajuda-cartas').onclick = () => {
+        if(!game.ajudas.cartas) return;
+        game.ajudas.cartas = false;
+        document.getElementById('ajuda-cartas').disabled = true;
+        let p = game.perguntasAtuais[game.fase];
+        let btns = document.getElementById('lista-respostas').children;
+        let sumidos = 0;
+        for(let i=0; i<4; i++) {
+            if(i !== p.correct && sumidos < 2) { 
+                btns[i].style.visibility = "hidden"; 
+                sumidos++; 
+            }
         }
-    }
-}
+    };
 
-function usarUniv() {
-    if(!game.ajudas.univ) return;
-    game.ajudas.univ = false;
-    document.getElementById('ajuda-univ').disabled = true;
-    alert("Universitários sugerem a: " + (game.perguntasAtuais[game.fase].correct + 1));
-}
+    document.getElementById('ajuda-univ').onclick = () => {
+        if(!game.ajudas.univ) return;
+        game.ajudas.univ = false;
+        document.getElementById('ajuda-univ').disabled = true;
+        alert("Os universitários acham que é a: " + (game.perguntasAtuais[game.fase].correct + 1));
+    };
 
-function usarPulo() {
-    if(!game.ajudas.pulo) return;
-    game.ajudas.pulo = false;
-    document.getElementById('ajuda-pulo').disabled = true;
-    game.fase++;
-    if(game.fase < game.perguntasAtuais.length) montarPergunta();
-    else finalizarPartida(true);
-}
+    document.getElementById('ajuda-pulo').onclick = () => {
+        if(!game.ajudas.pulo) return;
+        game.ajudas.pulo = false;
+        document.getElementById('ajuda-pulo').disabled = true;
+        game.fase++;
+        if(game.fase < game.perguntasAtuais.length) montarPergunta();
+        else finalizarPartida(true);
+    };
+});
 
-function resetAjudas() {
-    document.getElementById('ajuda-cartas').disabled = false;
-    document.getElementById('ajuda-univ').disabled = false;
-    document.getElementById('ajuda-pulo').disabled = false;
+function atualizarUIHeader() {
+    document.getElementById('traje-perfil').innerText = "👕 " + save.traje;
+    document.getElementById('saldo-moedas').innerText = save.moedas;
 }
 
 function finalizarPartida(venceu) {
     if(venceu) {
+        if(game.decada === '5060') save.conquistas.d50 = true;
+        if(game.decada === '7080') save.conquistas.d70 = true;
         if(game.decada === '9000') save.conquistas.d90 = true;
-        else if(game.decada === '5060') save.conquistas.d50 = true;
-        else if(game.decada === '7080') save.conquistas.d70 = true;
-        alert("VITÓRIA! Vc é sabido em!");
+        alert("PARABÉNS! Você completou a década!");
     }
     save.placar.push({ nome: game.nome, pontos: game.premio });
     save.placar.sort((a,b) => b.pontos - a.pontos);
     save.placar = save.placar.slice(0, 5);
-    salvarDados();
+    localStorage.setItem('show_save_pro', JSON.stringify(save));
     mudarTela('tela-menu');
 }
 
@@ -268,37 +266,21 @@ function comprar(nome, preco) {
         save.moedas -= preco;
         save.inventario.push(nome);
         save.traje = nome;
-        alert("Comprado e Equipado!");
-    } else alert("Dinheiro insuficiente!");
-    salvarDados();
-}
-
-function salvarDados() {
+        alert("Comprado!");
+    } else alert("Moedas insuficientes!");
     localStorage.setItem('show_save_pro', JSON.stringify(save));
     atualizarUIHeader();
 }
 
-function atualizarUIHeader() {
-    const nomeTxt = document.getElementById('nome-perfil');
-    const trajeTxt = document.getElementById('traje-perfil');
-    const saldoTxt = document.getElementById('saldo-moedas');
-    if(nomeTxt) nomeTxt.innerText = game.nome;
-    if(trajeTxt) trajeTxt.innerText = "👕 " + save.traje;
-    if(saldoTxt) saldoTxt.innerText = save.moedas;
-}
-
 function renderizarStats() {
     document.getElementById('lista-conquistas').innerHTML = `
-        <span class="medalha ${save.conquistas.d50 ? 'ativa' : ''}">🕰️ Anos 50/60</span>
-        <span class="medalha ${save.conquistas.d70 ? 'ativa' : ''}">🌈 Anos 70/80</span>
-        <span class="medalha ${save.conquistas.d90 ? 'ativa' : ''}">🎓 Vc é sabido em!</span>
+        <span class="medalha ${save.conquistas.d50 ? 'ativa' : ''}">Anos 50/60</span>
+        <span class="medalha ${save.conquistas.d70 ? 'ativa' : ''}">Anos 70/80</span>
+        <span class="medalha ${save.conquistas.d90 ? 'ativa' : ''}">Anos 90/00</span>
     `;
-    document.getElementById('placar-lideres').innerHTML = save.placar.map((p, i) => `
-        <div style="display:flex; justify-content:space-between; border-bottom:1px solid #444; padding: 4px 0;">
-            <span>${i+1}º ${p.nome}</span><span>R$ ${p.pontos.toLocaleString()}</span>
+    document.getElementById('placar-lideres').innerHTML = save.placar.map(p => `
+        <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+            <span>${p.nome}</span><span>R$ ${p.pontos.toLocaleString()}</span>
         </div>
     `).join('') || "Sem recordes.";
 }
-
-// CHAMA A INICIALIZAÇÃO
-document.addEventListener('DOMContentLoaded', iniciarSistema);
