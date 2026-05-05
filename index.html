@@ -1,25 +1,65 @@
-<div id="tela-loja" class="tela">
-    <h2>🛒 Loja e Cartório</h2>
-    <div class="item-loja">
-        <input type="text" id="novo-nome" placeholder="Novo nome..." style="width: 60%; margin: 0;">
-        <button onclick="salvarNome()" style="width: auto; background: #28a745;">Mudar Nome</button>
-    </div>
-    <hr>
-    <div class="item-loja"><p>🕺 Anos 50 (500 moedas)</p><button onclick="comprar('Anos 50', 500)">Comprar</button></div>
-    <div class="item-loja"><p>🌈 Anos 70 (1000 moedas)</p><button onclick="comprar('Anos 70', 1000)">Comprar</button></div>
-    <div class="item-loja"><p>🕶️ Anos 90 (1500 moedas)</p><button onclick="comprar('Anos 90', 1500)">Comprar</button></div>
-    <button class="btn-voltar">⬅ Voltar</button>
-</div>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show das Décadas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <div id="header-perfil">
+            <div class="user-data">
+                <span id="nome-perfil">Viajante</span>
+            </div>
+            <div class="moedas-total">🪙 <span id="saldo-moedas">0</span></div>
+        </div>
 
-<div id="tela-stats" class="tela">
-    <h2>🏆 Seu Desempenho</h2>
-    <div class="box-stats" style="margin-bottom: 15px; border: 1px solid #ffd700;">
-        <p>🎮 Total de Partidas: <span id="st-jogadas">0</span></p>
-        <p>✅ Vitórias: <span id="st-ganhas">0</span></p>
-        <p>❌ Derrotas: <span id="st-perdidas">0</span></p>
+        <div id="tela-menu" class="tela active">
+            <h1>Show das Décadas</h1>
+            <p>Escolha uma década para começar:</p>
+            <button class="btn-decada" data-decada="5060">Anos 50 e 60</button>
+            <button class="btn-decada" data-decada="7080">Anos 70 e 80</button>
+            <button class="btn-decada" data-decada="9000">Anos 90 e 00</button>
+            <hr>
+            <div style="display: flex; gap: 10px;">
+                <button id="btn-loja" style="background: #ff8c00 !important; color: white;">✍️ Mudar Nome</button>
+                <button id="btn-stats" style="background: #00aaff !important; color: white;">🏆 Stats</button>
+            </div>
+        </div>
+
+        <div id="tela-loja" class="tela">
+            <h2>✍️ Cartório</h2>
+            <div class="box-loja">
+                <p>Digite seu novo nome abaixo:</p>
+                <div style="display: flex; gap: 5px; margin-top: 10px;">
+                    <input type="text" id="novo-nome" placeholder="Ex: Mestre do Quiz">
+                    <button onclick="salvarNome()" style="width: auto; background: #28a745 !important; margin:0; padding: 5px 15px; color: white;">OK</button>
+                </div>
+            </div>
+            <p style="font-size: 0.8rem; margin-top: 15px; opacity: 0.7;">O nome será exibido no Ranking Global.</p>
+            <button class="btn-voltar" style="background: #666 !important; color: white;">⬅ Voltar</button>
+        </div>
+
+        <div id="tela-stats" class="tela">
+            <h2>📊 Seu Desempenho</h2>
+            <div class="box-stats">
+                <p>🎮 Partidas: <span id="st-jogadas">0</span></p>
+                <p>✅ Vitórias: <span id="st-ganhas">0</span></p>
+                <p>❌ Derrotas: <span id="st-perdidas">0</span></p>
+            </div>
+            <h2 style="margin-top: 15px;">🥇 Top 5 Recordes</h2>
+            <div id="placar-lideres" class="box-stats"></div>
+            <button class="btn-voltar" style="background: #666 !important; color: white;">⬅ Voltar</button>
+        </div>
+
+        <div id="tela-pergunta" class="tela">
+            <div class="status-jogo">Prêmio: R$ <b id="premio-txt">0</b></div>
+            <h3 id="txt-pergunta"></h3>
+            <div id="lista-respostas"></div>
+            <button onclick="finalizarPartida(false)" style="background: #cc0000 !important; color: #fff; margin-top: 20px;">Desistir</button>
+        </div>
     </div>
-    
-    <h2>🥇 Top 5 Recordes</h2>
-    <div id="placar-lideres" class="box-stats"></div>
-    <button class="btn-voltar">⬅ Voltar</button>
-</div>
+    <script src="script.js"></script>
+</body>
+</html>
