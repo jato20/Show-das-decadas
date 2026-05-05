@@ -76,10 +76,9 @@ function iniciarJogo(decada) {
     faseAtual = 0;
     premioTotal = 0;
     
-    // Embaralha as perguntas daquela década
-    perguntas[decada].sort(() => Math.random() - 0.5);
+    // Embaralha as perguntas
+    perguntas[decadaSelecionada].sort(() => Math.random() - 0.5);
 
-    // Zera o placar visualmente
     document.getElementById('valor-premio').innerText = "0";
     document.getElementById('tela-selecao').style.display = 'none';
     document.getElementById('tela-pergunta').style.display = 'block';
@@ -88,12 +87,13 @@ function iniciarJogo(decada) {
 
 function mostrarPergunta() {
     let dados = perguntas[decadaSelecionada][faseAtual];
+    
+    // Mostra a pergunta na tela
     document.getElementById('pergunta-texto').innerText = dados.q;
     
-    // Atualiza o contador de fases
-    let totalPerguntas = perguntas[decadaSelecionada].length;
+    // Atualiza fase e prêmio visualmente
     document.getElementById('fase-num').innerText = faseAtual + 1;
-    document.querySelector('.placar').innerHTML = `Fase: <span id="fase-num">${faseAtual + 1}</span> / ${totalPerguntas}`;
+    document.getElementById('valor-premio').innerText = premioTotal.toLocaleString('pt-BR');
 
     let divOpcoes = document.getElementById('alternativas');
     divOpcoes.innerHTML = ""; 
@@ -111,17 +111,15 @@ function verificarResposta(escolha) {
     
     if(escolha === correta) {
         faseAtual++;
-        premioTotal += 50000; // Soma 50 mil
+        premioTotal += 50000;
         
-        // Atualiza o prêmio na tela
-        document.getElementById('valor-premio').innerText = premioTotal.toLocaleString('pt-BR');
-        
-        alert("CERTA RESPOSTA! Você ganhou R$ " + premioTotal.toLocaleString('pt-BR'));
+        alert("CERTA RESPOSTA! Prêmio acumulado: R$ " + premioTotal.toLocaleString('pt-BR'));
 
+        // Verifica se ainda existem perguntas na lista
         if(faseAtual < perguntas[decadaSelecionada].length) {
             mostrarPergunta();
         } else {
-            alert("VOCÊ É UM GÊNIO! Ganhou R$ " + premioTotal.toLocaleString('pt-BR') + " e venceu o Show das Décadas!");
+            alert("PARABÉNS! Você completou o desafio e ganhou R$ " + premioTotal.toLocaleString('pt-BR') + "!");
             location.reload();
         }
     } else {
