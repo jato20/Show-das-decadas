@@ -3,47 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Show das Décadas</title>
+    <title>Show das Décadas Pro</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="game-container">
-        <div id="tela-perfil" class="tela active">
-            <h1>Show das Décadas</h1>
-            <div class="box">
-                <input type="text" id="input-nome" placeholder="Seu nome...">
-                <select id="select-traje">
-                    <option value="Iniciante">👕 Iniciante</option>
-                    <option value="Anos 50" id="traje-50" disabled>🕺 Anos 50 (Bloqueado)</option>
-                    <option value="Anos 70" id="traje-70" disabled>🌈 Anos 70 (Bloqueado)</option>
-                    <option value="Anos 90" id="traje-90" disabled>🕶️ Anos 90 (Bloqueado)</option>
-                </select>
+        <div id="header-perfil" class="hidden">
+            <div class="user-data">
+                <span id="nome-perfil"></span> | 
+                <span id="traje-perfil">👕 Iniciante</span>
             </div>
-            <button id="btn-salvar">Salvar e Continuar</button>
+            <div class="moedas-total">🪙 <span id="saldo-moedas">0</span></div>
         </div>
 
-        <div id="tela-selecao" class="tela">
-            <h2 id="boas-vindas"></h2>
-            <p>Escolha uma década:</p>
+        <div id="tela-login" class="tela active">
+            <h1>Show das Décadas</h1>
+            <div class="box">
+                <input type="text" id="input-nome" placeholder="Digite seu nome...">
+            </div>
+            <button id="btn-entrar">Entrar no Jogo</button>
+        </div>
+
+        <div id="tela-menu" class="tela">
+            <h2>Menu Principal</h2>
             <button class="btn-decada" data-decada="5060">Anos 50 e 60</button>
             <button class="btn-decada" data-decada="7080">Anos 70 e 80</button>
             <button class="btn-decada" data-decada="9000">Anos 90 e 00</button>
+            <hr>
+            <button id="btn-loja" style="background: #ff8c00;">🛒 Abrir Loja</button>
+        </div>
+
+        <div id="tela-loja" class="tela">
+            <h2>Loja de Trajes</h2>
+            <div class="item-loja">
+                <p>🕺 Traje Anos 50 (500 moedas)</p>
+                <button onclick="comprar('Anos 50', 500)">Comprar/Equipar</button>
+            </div>
+            <div class="item-loja">
+                <p>🌈 Traje Anos 70 (1000 moedas)</p>
+                <button onclick="comprar('Anos 70', 1000)">Comprar/Equipar</button>
+            </div>
+            <div class="item-loja">
+                <p>🕶️ Traje Anos 90 (1500 moedas)</p>
+                <button onclick="comprar('Anos 90', 1500)">Comprar/Equipar</button>
+            </div>
+            <button class="btn-voltar">⬅ Voltar</button>
         </div>
 
         <div id="tela-pergunta" class="tela">
-            <div class="header-jogo">
-                <div class="player-info">
-                    <b id="nome-p"></b> | <small id="traje-p"></small>
-                </div>
-                <div class="money">R$ <span id="premio-txt">0</span></div>
+            <div class="status-jogo">
+                <span>R$ <b id="premio-txt">0</b></span>
             </div>
-            <h2 id="txt-pergunta"></h2>
+            <h3 id="txt-pergunta"></h3>
             <div id="lista-respostas"></div>
             <div class="controles-ajuda">
                 <button id="ajuda-cartas">🃏 Cartas</button>
                 <button id="ajuda-univ">🎓 Univ.</button>
-                <button id="ajuda-pulo">⏭️ Pular</button>
+                <button id="ajuda-pulo">⏭️ Pulo</button>
             </div>
+            <button class="btn-voltar" style="background: #cc0000; color: #fff;">Desistir</button>
         </div>
     </div>
     <script src="script.js"></script>
