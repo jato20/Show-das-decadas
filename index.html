@@ -7,44 +7,44 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <div id="tela-perfil">
+    <div id="game-container">
+        <div id="tela-perfil" class="tela active">
             <h1>Show das Décadas</h1>
-            <div class="config-box">
+            <div class="box">
                 <input type="text" id="input-nome" placeholder="Digite seu nome...">
-                <p>Escolha seu Traje:</p>
                 <select id="select-traje">
                     <option value="Iniciante">👕 Iniciante</option>
-                    <option value="Boy da Brilhantina" id="traje-50" disabled>🕺 Anos 50 (Bloqueado)</option>
-                    <option value="Disco Star" id="traje-70" disabled>🌈 Anos 70 (Bloqueado)</option>
-                    <option value="Cyber Hacker" id="traje-90" disabled>🕶️ Anos 90 (Bloqueado)</option>
+                    <option value="Anos 50" id="traje-50" disabled>🕺 Anos 50 (Bloqueado)</option>
+                    <option value="Anos 70" id="traje-70" disabled>🌈 Anos 70 (Bloqueado)</option>
+                    <option value="Anos 90" id="traje-90" disabled>🕶️ Anos 90 (Bloqueado)</option>
                 </select>
             </div>
-            <button onclick="irParaSelecao()">Salvar e Continuar</button>
+            <button id="btn-salvar" class="btn-principal">Começar Jornada</button>
         </div>
 
-        <div id="tela-selecao" style="display:none;">
+        <div id="tela-selecao" class="tela">
             <h2 id="boas-vindas"></h2>
-            <p>Escolha uma década:</p>
-            <button onclick="iniciarJogo('5060')">Anos 50 e 60</button>
-            <button onclick="iniciarJogo('7080')">Anos 70 e 80</button>
-            <button onclick="iniciarJogo('9000')">Anos 90 e 00</button>
+            <p>Escolha o período:</p>
+            <button class="btn-decada" data-decada="5060">Anos 50 e 60</button>
+            <button class="btn-decada" data-decada="7080">Anos 70 e 80</button>
+            <button class="btn-decada" data-decada="9000">Anos 90 e 00</button>
         </div>
 
-        <div id="tela-pergunta" style="display:none;">
-            <div id="status-topo">
-                <div id="info-player">
-                    <b id="display-nome"></b><br>
-                    <small id="display-traje"></small>
+        <div id="tela-pergunta" class="tela">
+            <div class="header-jogo">
+                <div class="player-info">
+                    <span id="nome-p"></span> | <small id="traje-p"></small>
                 </div>
-                <div class="dinheiro">R$ <span id="valor-premio">0</span></div>
+                <div class="money">R$ <span id="premio-txt">0</span></div>
             </div>
-            <h2 id="pergunta-texto"></h2>
-            <div id="alternativas"></div>
-            <div id="ajudas">
-                <button id="btn-cartas" class="btn-ajuda" onclick="ajudaCartas()">🃏 Cartas</button>
-                <button id="btn-universitarios" class="btn-ajuda" onclick="ajudaUniversitarios()">🎓 Univ.</button>
-                <button id="btn-pular" class="btn-ajuda" onclick="ajudaPular()">⏭️ Pular</button>
+            <div id="caixa-pergunta">
+                <h2 id="txt-pergunta"></h2>
+                <div id="lista-respostas"></div>
+            </div>
+            <div class="controles-ajuda">
+                <button id="ajuda-cartas">🃏 Cartas</button>
+                <button id="ajuda-univ">🎓 Univ.</button>
+                <button id="ajuda-pulo">⏭️ Pular</button>
             </div>
         </div>
     </div>
