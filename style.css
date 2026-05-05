@@ -1,7 +1,8 @@
+/* Configuração Geral */
 body {
-    background-color: #0f0c29;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #000033; /* Azul escuro estilo TV */
     color: white;
-    font-family: sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,37 +10,84 @@ body {
     margin: 0;
 }
 
-#game-container {
+.container {
+    background-color: #000066;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
     width: 90%;
     max-width: 400px;
     text-align: center;
-    background: #24243e;
-    padding: 20px;
-    border-radius: 20px;
-    box-shadow: 0 0 20px rgba(0,255,255,0.2);
-    border: 2px solid #00d2ff;
+    border: 2px solid #ffd700;
 }
 
-button {
-    width: 100%;
-    padding: 15px;
-    margin: 10px 0;
-    font-size: 16px;
-    font-weight: bold;
-    color: white;
-    background: #302b63;
-    border: 1px solid #00d2ff;
+/* Topo do Jogo (Onde fica o dinheiro) */
+#status-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #000044;
+    padding: 10px;
     border-radius: 10px;
-    cursor: pointer;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ffd700;
 }
 
-button:active {
-    background: #00d2ff;
-    color: #0f0c29;
+.dinheiro {
+    color: #00ff00; /* Verde dinheiro */
+    font-weight: bold;
+    font-size: 18px;
+    margin: 0;
 }
 
 .placar {
-    margin-top: 20px;
-    font-size: 14px;
-    color: #aaa;
+    color: #fff;
+    margin: 0;
 }
+
+/* Botões de Resposta */
+button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 2px solid #fff;
+    background-color: #0000aa;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: #ffd700;
+    color: #000;
+}
+
+/* Sistema de Ajudas (Lado a lado) */
+#ajudas {
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.btn-ajuda {
+    font-size: 11px !important;
+    padding: 8px 2px !important;
+    background-color: #444 !important;
+    border: 1px solid #999 !important;
+    white-space: nowrap;
+}
+
+.btn-ajuda:disabled {
+    background-color: #222 !important;
+    color: #666 !important;
+    border-color: #333 !important;
+    opacity: 0.5;
+}
+
+h1 { color: #ffd700; }
+h2 { font-size: 20px; margin-bottom: 20px; min-height: 60px; }
+hr { border: 0; border-top: 1px solid #333; margin: 20px 0; }
