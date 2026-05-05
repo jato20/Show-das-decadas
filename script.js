@@ -24,7 +24,7 @@ const perguntas = {
         { q: "Quem foi o Rei do Baião?", options: ["Luiz Gonzaga", "Dominguinhos", "Gilberto Gil", "Caetano"], correct: 0 },
         { q: "Qual brinquedo foi lançado em 1959 pela Mattel?", options: ["Barbie", "Lego", "Max Steel", "Hot Wheels"], correct: 0 },
         { q: "Qual filme ganhou o primeiro Oscar de 1950?", options: ["A Malvada", "Cinderela", "Ben-Hur", "Casablanca"], correct: 0 },
-        { q: "País que sediou a Copa de 1950:", options: ["Brasil", "Uruguai", "Itália", "França"], correct: 0 },
+        { q: "País que sediou a Copa de 1950?", options: ["Brasil", "Uruguai", "Itália", "França"], correct: 0 },
         { q: "Qual o nome da TV inaugurada em 1950?", options: ["Globo", "Record", "Tupi", "SBT"], correct: 2 },
         { q: "Quem foi o sucessor de Getúlio Vargas em 1954?", options: ["Café Filho", "JK", "Jânio", "Dutra"], correct: 0 },
         { q: "Em que ano terminou a Guerra da Coreia?", options: ["1950", "1953", "1955", "1960"], correct: 1 },
@@ -111,18 +111,44 @@ let faseAtual = 0;
 let decadaSelecionada = "";
 let premioTotal = 0;
 let ajudas = { cartas: true, univ: true, pulo: true };
+let dadosJogador = {
+    nome: "",
+    traje: "Iniciante",
+    conquistas: JSON.parse(localStorage.getItem('showDecadasConquistas')) || { r50: false, r70: false, r90: false }
+};
+
+window.onload = () => {
+    atualizarLoja();
+};
+
+function atualizarLoja() {
+    if (dadosJogador.conquistas.r50) document.getElementById('traje-50').disabled = false;
+    if (dadosJogador.conquistas.r70) document.getElementById('traje-70').disabled = false;
+    if (dadosJogador.conquistas.r90) document.getElementById('traje-90').disabled = false;
+}
+
+function irParaSelecao() {
+    dadosJogador.nome = document.getElementById('input-nome').value || "Jogador";
+    dadosJogador.traje = document.getElementById('select-traje').value;
+    
+    document.getElementById('boas-vindas').innerText = `Olá, ${dadosJogador.nome}!`;
+    document.getElementById('tela-perfil').style.display = 'none';
+    document.getElementById('tela-selecao').style.display = 'block';
+}
 
 function iniciarJogo(decada) {
-    document.body.className = ''; 
-    document.body.classList.add('tema-' + decada);
+    document.body.className = 'tema-' + decada;
     decadaSelecionada = decada;
     faseAtual = 0;
     premioTotal = 0;
     ajudas = { cartas: true, univ: true, pulo: true };
-    document.getElementById('btn-cartas').disabled = false;
-    document.getElementById('btn-universitarios').disabled = false;
-    document.getElementById('btn-pular').disabled = false;
+    
+    document.getElementById('player-tag').innerText = dadosJogador.nome;
+    document.getElementById('traje-tag').innerText = "Traje: " + dadosJogador.traje;
+    
+    document.querySelectorAll('.btn-ajuda').forEach(b => b.disabled = false);
     perguntas[decadaSelecionada].sort(() => Math.random() - 0.5);
+    
     document.getElementById('tela-selecao').style.display = 'none';
     document.getElementById('tela-pergunta').style.display = 'block';
     mostrarPergunta();
@@ -131,17 +157,45 @@ function iniciarJogo(decada) {
 function mostrarPergunta() {
     let dados = perguntas[decadaSelecionada][faseAtual];
     document.getElementById('pergunta-texto').innerText = dados.q;
-    document.getElementById('fase-num').innerText = faseAtual + 1;
     document.getElementById('valor-premio').innerText = premioTotal.toLocaleString('pt-BR');
-    let divOpcoes = document.getElementById('alternativas');
-    divOpcoes.innerHTML = ""; 
+    
+    let div = document.getElementById('alternativas');
+    div.innerHTML = "";
     dados.options.forEach((opt, index) => {
         let btn = document.createElement('button');
         btn.innerText = opt;
         btn.id = "opt-" + index;
         btn.onclick = () => verificarResposta(index);
-        divOpcoes.appendChild(btn);
+        div.appendChild(btn);
     });
+}
+
+function verificarResposta(escolha) {
+    let correta = perguntas[decadaSelecionada][faseAtual].correct;
+    if (escolha === correta) {
+        faseAtual++;
+        premioTotal += 50000;
+        if (faseAtual < perguntas[decadaSelecionada].length) {
+            alert("CERTA RESPOSTA!");
+            mostrarPergunta();
+        } else {
+            vitoriaFinal();
+        }
+    } else {
+        alert("ERRADO! Você perdeu.");
+        location.reload();
+    }
+}
+
+function vitoriaFinal() {
+    alert(`PARABÉNS ${dadosJogador.nome}! Você venceu e desbloqueou um novo traje!`);
+    
+    if (decadaSelecionada === '5060') dadosJogador.conquistas.r50 = true;
+    if (decadaSelecionada === '7080') dadosJogador.conquistas.r70 = true;
+    if (decadaSelecionada === '9000') dadosJogador.conquistas.r90 = true;
+    
+    localStorage.setItem('showDecadasConquistas', JSON.stringify(dadosJogador.conquistas));
+    location.reload();
 }
 
 function ajudaCartas() {
@@ -150,9 +204,9 @@ function ajudaCartas() {
     document.getElementById('btn-cartas').disabled = true;
     let correta = perguntas[decadaSelecionada][faseAtual].correct;
     let eliminados = 0;
-    [0, 1, 2, 3].sort(() => Math.random() - 0.5).forEach(i => {
-        if (i !== correta && eliminados < 2) {
-            document.getElementById("opt-" + i).style.visibility = "hidden";
+    [0,1,2,3].sort(()=>Math.random()-0.5).forEach(i => {
+        if(i !== correta && eliminados < 2) {
+            document.getElementById("opt-"+i).style.visibility = "hidden";
             eliminados++;
         }
     });
@@ -164,7 +218,7 @@ function ajudaUniversitarios() {
     document.getElementById('btn-universitarios').disabled = true;
     let correta = perguntas[decadaSelecionada][faseAtual].correct;
     let resp = Math.random() < 0.7 ? perguntas[decadaSelecionada][faseAtual].options[correta] : "Dificil dizer...";
-    alert("Universitários acham que é: " + resp);
+    alert("Os Universitários acham que é: " + resp);
 }
 
 function ajudaPular() {
@@ -173,22 +227,4 @@ function ajudaPular() {
     document.getElementById('btn-pular').disabled = true;
     faseAtual++;
     mostrarPergunta();
-}
-
-function verificarResposta(escolha) {
-    let correta = perguntas[decadaSelecionada][faseAtual].correct;
-    if(escolha === correta) {
-        faseAtual++;
-        premioTotal += 50000;
-        alert("CERTA RESPOSTA!");
-        if(faseAtual < perguntas[decadaSelecionada].length) {
-            mostrarPergunta();
-        } else {
-            alert("VOCÊ GANHOU O JOGO!");
-            location.reload();
-        }
-    } else {
-        alert("ERRADO! Fim de jogo.");
-        location.reload();
-    }
 }
