@@ -8,29 +8,39 @@
 </head>
 <body>
     <div id="game-container">
-        <div id="header-perfil" class="hidden">
+        <div id="header-perfil" onclick="abrirPerfil()">
             <div class="user-data">
-                <span id="nome-perfil"></span> | 
-                <span id="traje-perfil">👕 Iniciante</span>
+                <span id="nome-perfil">Viajante</span> <br>
+                <small id="traje-perfil">👕 Iniciante</small>
             </div>
             <div class="moedas-total">🪙 <span id="saldo-moedas">0</span></div>
         </div>
 
-        <div id="tela-login" class="tela active">
+        <div id="tela-menu" class="tela active">
             <h1>Show das Décadas</h1>
-            <input type="text" id="input-nome" placeholder="Digite seu nome...">
-            <button id="btn-entrar">Entrar no Jogo</button>
-        </div>
-
-        <div id="tela-menu" class="tela">
-            <h2>Menu Principal</h2>
+            <p>Escolha uma época para jogar:</p>
             <button class="btn-decada" data-decada="5060">Anos 50 e 60</button>
             <button class="btn-decada" data-decada="7080">Anos 70 e 80</button>
             <button class="btn-decada" data-decada="9000">Anos 90 e 00</button>
             <hr>
             <div style="display: flex; gap: 10px;">
                 <button id="btn-loja" style="background: #ff8c00;">🛒 Loja</button>
-                <button id="btn-stats" style="background: #00aaff;">📊 Status</button>
+                <button id="btn-stats" style="background: #00aaff;">🏆 Ranking</button>
+            </div>
+        </div>
+
+        <div id="modal-perfil" class="modal">
+            <div class="modal-content">
+                <h2>Seu Perfil</h2>
+                <div id="stats-detalhado">
+                    <p>🎮 Partidas Jogadas: <span id="st-jogadas">0</span></p>
+                    <p>✅ Partidas Ganhas: <span id="st-ganhas">0</span></p>
+                    <p>❌ Partidas Perdidas: <span id="st-perdidas">0</span></p>
+                </div>
+                <hr>
+                <input type="text" id="novo-nome" placeholder="Novo nome...">
+                <button onclick="salvarNome()" style="background: #28a745; color: white;">Salvar Nome</button>
+                <button onclick="fecharPerfil()" class="btn-voltar">Fechar</button>
             </div>
         </div>
 
@@ -43,8 +53,6 @@
         </div>
 
         <div id="tela-stats" class="tela">
-            <h2>🏆 Conquistas</h2>
-            <div id="lista-conquistas" class="box-stats"></div>
             <h2>🥇 Top 5 Recordes</h2>
             <div id="placar-lideres" class="box-stats"></div>
             <button class="btn-voltar">⬅ Voltar</button>
@@ -59,7 +67,7 @@
                 <button id="ajuda-univ">🎓 Univ.</button>
                 <button id="ajuda-pulo">⏭️ Pulo</button>
             </div>
-            <button class="btn-voltar" style="background: #cc0000; color: #fff;">Desistir</button>
+            <button onclick="finalizarPartida(false)" style="background: #cc0000; color: #fff;">Desistir</button>
         </div>
     </div>
     <script src="script.js"></script>
