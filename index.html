@@ -18,9 +18,7 @@
 
         <div id="tela-login" class="tela active">
             <h1>Show das Décadas</h1>
-            <div class="box">
-                <input type="text" id="input-nome" placeholder="Digite seu nome...">
-            </div>
+            <input type="text" id="input-nome" placeholder="Digite seu nome...">
             <button id="btn-entrar">Entrar no Jogo</button>
         </div>
 
@@ -30,30 +28,30 @@
             <button class="btn-decada" data-decada="7080">Anos 70 e 80</button>
             <button class="btn-decada" data-decada="9000">Anos 90 e 00</button>
             <hr>
-            <button id="btn-loja" style="background: #ff8c00;">🛒 Abrir Loja</button>
+            <div style="display: flex; gap: 10px;">
+                <button id="btn-loja" style="background: #ff8c00;">🛒 Loja</button>
+                <button id="btn-stats" style="background: #00aaff;">📊 Status</button>
+            </div>
         </div>
 
         <div id="tela-loja" class="tela">
             <h2>Loja de Trajes</h2>
-            <div class="item-loja">
-                <p>🕺 Traje Anos 50 (500 moedas)</p>
-                <button onclick="comprar('Anos 50', 500)">Comprar/Equipar</button>
-            </div>
-            <div class="item-loja">
-                <p>🌈 Traje Anos 70 (1000 moedas)</p>
-                <button onclick="comprar('Anos 70', 1000)">Comprar/Equipar</button>
-            </div>
-            <div class="item-loja">
-                <p>🕶️ Traje Anos 90 (1500 moedas)</p>
-                <button onclick="comprar('Anos 90', 1500)">Comprar/Equipar</button>
-            </div>
+            <div class="item-loja"><p>🕺 Anos 50 (500 moedas)</p><button onclick="comprar('Anos 50', 500)">Comprar</button></div>
+            <div class="item-loja"><p>🌈 Anos 70 (1000 moedas)</p><button onclick="comprar('Anos 70', 1000)">Comprar</button></div>
+            <div class="item-loja"><p>🕶️ Anos 90 (1500 moedas)</p><button onclick="comprar('Anos 90', 1500)">Comprar</button></div>
+            <button class="btn-voltar">⬅ Voltar</button>
+        </div>
+
+        <div id="tela-stats" class="tela">
+            <h2>🏆 Conquistas</h2>
+            <div id="lista-conquistas" class="box-stats"></div>
+            <h2>🥇 Top 5 Recordes</h2>
+            <div id="placar-lideres" class="box-stats"></div>
             <button class="btn-voltar">⬅ Voltar</button>
         </div>
 
         <div id="tela-pergunta" class="tela">
-            <div class="status-jogo">
-                <span>R$ <b id="premio-txt">0</b></span>
-            </div>
+            <div class="status-jogo">R$ <b id="premio-txt">0</b></div>
             <h3 id="txt-pergunta"></h3>
             <div id="lista-respostas"></div>
             <div class="controles-ajuda">
