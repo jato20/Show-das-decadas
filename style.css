@@ -1,16 +1,16 @@
 body { margin: 0; background: #000839; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; }
-#game-container { width: 350px; background: #001580; border: 3px solid #ffd700; border-radius: 15px; padding: 20px; text-align: center; }
+#game-container { width: 350px; background: #001580; border: 3px solid #ffd700; border-radius: 15px; padding: 20px; text-align: center; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
 .tela { display: none; }
-.tela.active { display: block; }
-.box { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; margin-bottom: 20px; }
-input, select { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none; box-sizing: border-box; }
-.header-jogo { display: flex; justify-content: space-between; background: #000; padding: 10px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ffd700; }
-.money { color: #00ff00; font-weight: bold; }
-button { width: 100%; padding: 12px; margin: 5px 0; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; background: #ffd700; color: #000; }
+.active { display: block; }
+.hidden { display: none !important; }
+#header-perfil { display: flex; justify-content: space-between; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; border: 1px solid #ffd700; }
+.box { margin-bottom: 15px; }
+input { width: 90%; padding: 12px; border-radius: 5px; border: none; }
+button { width: 100%; padding: 12px; margin: 5px 0; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; background: #ffd700; color: #000; transition: 0.2s; }
 button:hover { background: #fff; }
-button:disabled { opacity: 0.3; cursor: not-allowed; }
-.controles-ajuda { display: flex; gap: 5px; margin-top: 15px; }
-.controles-ajuda button { background: #444; color: white; font-size: 11px; }
-.bg-5060 { background-color: #3e2723 !important; }
-.bg-7080 { background-color: #311b92 !important; }
-.bg-9000 { background-color: #004d40 !important; }
+.item-loja { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; margin-bottom: 10px; }
+.item-loja button { width: auto; padding: 5px 10px; font-size: 11px; }
+.status-jogo { background: #000; padding: 10px; border-radius: 8px; margin-bottom: 10px; color: #00ff00; font-size: 1.2em; }
+.controles-ajuda { display: flex; gap: 5px; margin-top: 10px; }
+.controles-ajuda button { background: #444; color: white; font-size: 10px; }
+.btn-voltar { background: #666; color: white; margin-top: 15px; }
