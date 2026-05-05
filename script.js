@@ -16,7 +16,7 @@ const DB = {
         { q: "Primeiro homem no espaço (1961):", options: ["Neil Armstrong", "Yuri Gagarin", "Buzz Aldrin", "Marcos Pontes"], correct: 1 },
         { q: "Desenho de Hanna-Barbera de 1960:", options: ["Os Flintstones", "Ben 10", "Simpsons", "Dragon Ball"], correct: 0 },
         { q: "Onde foi a Copa de 1962?", options: ["Brasil", "Chile", "Inglaterra", "Suécia"], correct: 1 },
-        { q: "Banda britânica que estourou em 1963:", options: ["The Beatles", "The Who", "Led Zeppelin", "Queen"], correct: 0 },
+        { q: "Banda britânica que estourou em 1963?", options: ["The Beatles", "The Who", "Led Zeppelin", "Queen"], correct: 0 },
         { q: "Quem foi o Rei do Baião?", options: ["Luiz Gonzaga", "Dominguinhos", "Gilberto Gil", "Caetano"], correct: 0 },
         { q: "Brinquedo lançado em 1959 pela Mattel:", options: ["Barbie", "Lego", "Max Steel", "Hot Wheels"], correct: 0 },
         { q: "País que sediou a Copa de 1950:", options: ["Brasil", "Uruguai", "Itália", "França"], correct: 0 },
@@ -113,7 +113,23 @@ let save = JSON.parse(localStorage.getItem('show_save_pro')) || {
     conquistas: { d50: false, d70: false, d90: false }, placar: []
 };
 
-let game = { nome: "", decada: "", fase: 0, premio: 0, ajudas: { cartas: true, univ: true, pulo: true } };
+let game = { 
+    nome: "", 
+    decada: "", 
+    fase: 0, 
+    premio: 0, 
+    ajudas: { cartas: true, univ: true, pulo: true },
+    perguntasAtuais: [] 
+};
+
+// --- FUNÇÃO DE BARALHAMENTO (Fisher-Yates) ---
+function embaralhar(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
 
 function mudarTela(id) {
     document.querySelectorAll('.tela').forEach(t => t.classList.remove('active'));
@@ -135,114 +151,22 @@ window.onload = () => {
 
     document.querySelectorAll('.btn-decada').forEach(btn => {
         btn.onclick = () => {
-            game.decada = btn.getAttribute('data-decada');
-            game.fase = 0; game.premio = 0;
+            let decadaSelecionada = btn.getAttribute('data-decada');
+            game.decada = decadaSelecionada;
+            
+            // PEGA AS PERGUNTAS E EMBARALHA ANTES DE COMEÇAR
+            game.perguntasAtuais = embaralhar([...DB[decadaSelecionada]]);
+            
+            game.fase = 0; 
+            game.premio = 0;
             game.ajudas = { cartas: true, univ: true, pulo: true };
-            document.getElementById('ajuda-cartas').disabled = false;
-            document.getElementById('ajuda-univ').disabled = false;
-            document.getElementById('ajuda-pulo').disabled = false;
+            
+            resetBotoesAjuda();
             mudarTela('tela-pergunta');
             montarPergunta();
         };
     });
 
+    // AJUDAS
     document.getElementById('ajuda-cartas').onclick = () => {
-        if(!game.ajudas.cartas) return;
-        game.ajudas.cartas = false;
-        document.getElementById('ajuda-cartas').disabled = true;
-        let correta = DB[game.decada][game.fase].correct;
-        let btns = document.getElementById('lista-respostas').children;
-        let sumidos = 0;
-        for(let i=0; i<4; i++) {
-            if(i !== correta && sumidos < 2) { btns[i].style.visibility = "hidden"; sumidos++; }
-        }
-    };
-
-    document.getElementById('ajuda-univ').onclick = () => {
-        if(!game.ajudas.univ) return;
-        game.ajudas.univ = false;
-        document.getElementById('ajuda-univ').disabled = true;
-        alert("Universitários acham que é a: " + (DB[game.decada][game.fase].correct + 1));
-    };
-
-    document.getElementById('ajuda-pulo').onclick = () => {
-        if(!game.ajudas.pulo) return;
-        game.ajudas.pulo = false;
-        document.getElementById('ajuda-pulo').disabled = true;
-        game.fase++;
-        if(game.fase < DB[game.decada].length) montarPergunta();
-        else finalizarPartida(true);
-    };
-};
-
-function montarPergunta() {
-    const p = DB[game.decada][game.fase];
-    document.getElementById('txt-pergunta').innerText = p.q;
-    document.getElementById('premio-txt').innerText = game.premio.toLocaleString();
-    const lista = document.getElementById('lista-respostas');
-    lista.innerHTML = "";
-    p.options.forEach((txt, i) => {
-        const btn = document.createElement('button');
-        btn.innerText = txt;
-        btn.onclick = () => {
-            if(i === p.correct) {
-                game.fase++; game.premio += 50000; save.moedas += 100;
-                salvarDados();
-                if(game.fase < DB[game.decada].length) montarPergunta();
-                else finalizarPartida(true);
-            } else { alert("Errou!"); finalizarPartida(false); }
-        };
-        lista.appendChild(btn);
-    });
-}
-
-function finalizarPartida(venceu) {
-    if(venceu) {
-        if(game.decada === '9000') save.conquistas.d90 = true;
-        else if(game.decada === '5060') save.conquistas.d50 = true;
-        else if(game.decada === '7080') save.conquistas.d70 = true;
-        alert("Você completou a década!");
-    }
-    save.placar.push({ nome: game.nome, pontos: game.premio });
-    save.placar.sort((a,b) => b.pontos - a.pontos);
-    save.placar = save.placar.slice(0, 5);
-    salvarDados();
-    mudarTela('tela-menu');
-}
-
-function comprar(nome, preco) {
-    if(save.inventario.includes(nome)) {
-        save.traje = nome;
-        alert("Equipado!");
-    } else if(save.moedas >= preco) {
-        save.moedas -= preco;
-        save.inventario.push(nome);
-        save.traje = nome;
-        alert("Comprado!");
-    } else alert("Moedas insuficientes!");
-    salvarDados();
-}
-
-function salvarDados() {
-    localStorage.setItem('show_save_pro', JSON.stringify(save));
-    atualizarUIHeader();
-}
-
-function atualizarUIHeader() {
-    document.getElementById('nome-perfil').innerText = game.nome;
-    document.getElementById('traje-perfil').innerText = "👕 " + save.traje;
-    document.getElementById('saldo-moedas').innerText = save.moedas;
-}
-
-function renderizarStats() {
-    document.getElementById('lista-conquistas').innerHTML = `
-        <span class="medalha ${save.conquistas.d50 ? 'ativa' : ''}">🕰️ Anos 50/60</span>
-        <span class="medalha ${save.conquistas.d70 ? 'ativa' : ''}">🌈 Anos 70/80</span>
-        <span class="medalha ${save.conquistas.d90 ? 'ativa' : ''}">🎓 Vc é sabido em!</span>
-    `;
-    document.getElementById('placar-lideres').innerHTML = save.placar.map((p, i) => `
-        <div style="display:flex; justify-content:space-between; border-bottom:1px solid #444; padding: 4px 0;">
-            <span>${i+1}º ${p.nome}</span><span>R$ ${p.pontos.toLocaleString()}</span>
-        </div>
-    `).join('') || "Sem recordes.";
-}
+        if(!game.ajudas.cart
