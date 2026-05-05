@@ -1,5 +1,5 @@
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', sans-serif;
     background-color: #000033;
     color: white;
     display: flex;
@@ -7,66 +7,64 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    transition: background 0.8s ease; /* Efeito suave na troca de cor */
+    transition: 0.8s;
 }
 
-/* TEMAS POR DÉCADA */
-body.tema-5060 { background-color: #4b3621; } /* Bege/Marrom Retrô */
-body.tema-7080 { background-color: #2b0035; } /* Roxo Disco/Neon */
-body.tema-9000 { background-color: #001a1a; } /* Verde Matrix/Tech */
+/* TEMAS */
+body.tema-5060 { background-color: #4b3621; } 
+body.tema-7080 { background-color: #2b0035; } 
+body.tema-9000 { background-color: #001a1a; } 
 
 .container {
-    background-color: rgba(0, 0, 50, 0.85);
-    padding: 25px;
+    background-color: rgba(0, 0, 50, 0.9);
+    padding: 30px;
     border-radius: 20px;
     width: 90%;
     max-width: 400px;
     text-align: center;
     border: 3px solid #ffd700;
-    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+
+.config-box {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: none;
 }
 
 #status-topo {
     display: flex;
     justify-content: space-between;
-    background: rgba(0,0,0,0.4);
-    padding: 12px;
+    text-align: left;
+    background: rgba(0,0,0,0.5);
+    padding: 10px;
     border-radius: 10px;
-    margin-bottom: 20px;
-    border: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 15px;
 }
 
-.dinheiro { color: #00ff00; font-weight: bold; font-size: 22px; margin: 0; }
-.placar { font-size: 16px; margin: 0; align-self: center; }
-
-h2 { font-size: 1.2rem; min-height: 70px; margin-bottom: 20px; }
+.dinheiro { color: #00ff00; font-weight: bold; font-size: 20px; }
 
 button {
     width: 100%;
-    padding: 14px;
-    margin: 8px 0;
-    border-radius: 10px;
-    border: 2px solid white;
-    background: linear-gradient(180deg, #0000aa, #000066);
+    padding: 12px;
+    margin: 5px 0;
+    border-radius: 8px;
+    background: #0000aa;
     color: white;
     font-weight: bold;
     cursor: pointer;
-    transition: 0.2s;
+    border: 2px solid white;
 }
 
-button:hover { background: #ffd700; color: black; border-color: #000; }
+button:hover { background: #ffd700; color: black; }
 
-#ajudas {
-    display: flex;
-    gap: 8px;
-    margin-top: 20px;
-}
-
-.btn-ajuda {
-    background: #333;
-    font-size: 11px;
-    padding: 10px 5px;
-    border-color: #666;
-}
-
-.btn-ajuda:disabled { opacity: 0.2; cursor: not-allowed; filter: grayscale(1); }
+.btn-ajuda { font-size: 11px; background: #333; }
+.btn-ajuda:disabled { opacity: 0.2; }
