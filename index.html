@@ -7,22 +7,37 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="game-container">
-        <h1 id="titulo">Show das Décadas</h1>
-        
+    <div class="container">
         <div id="tela-selecao">
-            <p>Escolha uma era para jogar:</p>
+            <h1>Show das Décadas</h1>
+            <p>Escolha uma época para começar:</p>
             <button onclick="iniciarJogo('5060')">Anos 50 e 60</button>
             <button onclick="iniciarJogo('7080')">Anos 70 e 80</button>
             <button onclick="iniciarJogo('9000')">Anos 90 e 00</button>
         </div>
-        
-<div id="tela-pergunta" style="display:none;">
-            <h2 id="pergunta-texto">Pergunta aqui</h2>
-            <div id="alternativas"></div>
-            <p class="placar">Fase: <span id="fase-num">1</span>/20</p>
-            <p class="dinheiro">Prêmio: R$ <span id="valor-premio">0</span></p>
+
+        <div id="tela-pergunta" style="display:none;">
+            <div id="status-topo">
+                <p class="dinheiro">Prêmio: R$ <span id="valor-premio">0</span></p>
+                <p class="placar">Fase: <span id="fase-num">1</span></p>
+            </div>
+
+            <h2 id="pergunta-texto">Carregando pergunta...</h2>
+
+            <div id="alternativas">
+                </div>
+
+            <hr>
+
+            <p style="font-size: 14px; margin-bottom: 10px;">Ajudas Disponíveis:</p>
+            <div id="ajudas">
+                <button id="btn-cartas" class="btn-ajuda" onclick="ajudaCartas()">🃏 Cartas</button>
+                <button id="btn-universitarios" class="btn-ajuda" onclick="ajudaUniversitarios()">🎓 Universitários</button>
+                <button id="btn-pular" class="btn-ajuda" onclick="ajudaPular()">⏭️ Pular</button>
+            </div>
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
+</html>
