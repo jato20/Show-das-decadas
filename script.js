@@ -1,3 +1,4 @@
+// BANCO DE PERGUNTAS (Mantendo as mesmas que você já tem)
 const perguntas = {
     '5060': [
         { q: "Quem era o Rei do Rock nos anos 50?", options: ["Elvis Presley", "Beatles", "Nirvana", "Pelé"], correct: 0 },
@@ -24,7 +25,7 @@ const perguntas = {
         { q: "Quem foi o Rei do Baião?", options: ["Luiz Gonzaga", "Dominguinhos", "Gilberto Gil", "Caetano"], correct: 0 },
         { q: "Qual brinquedo foi lançado em 1959 pela Mattel?", options: ["Barbie", "Lego", "Max Steel", "Hot Wheels"], correct: 0 },
         { q: "Qual filme ganhou o primeiro Oscar de 1950?", options: ["A Malvada", "Cinderela", "Ben-Hur", "Casablanca"], correct: 0 },
-        { q: "País que sediou a Copa de 1950?", options: ["Brasil", "Uruguai", "Itália", "França"], correct: 0 },
+        { q: "País que sediou a Copa de 1950:", options: ["Brasil", "Uruguai", "Itália", "França"], correct: 0 },
         { q: "Qual o nome da TV inaugurada em 1950?", options: ["Globo", "Record", "Tupi", "SBT"], correct: 2 },
         { q: "Quem foi o sucessor de Getúlio Vargas em 1954?", options: ["Café Filho", "JK", "Jânio", "Dutra"], correct: 0 },
         { q: "Em que ano terminou a Guerra da Coreia?", options: ["1950", "1953", "1955", "1960"], correct: 1 },
@@ -107,6 +108,7 @@ const perguntas = {
     ]
 };
 
+// ESTADO DO JOGO
 let faseAtual = 0;
 let decadaSelecionada = "";
 let premioTotal = 0;
@@ -114,22 +116,37 @@ let ajudas = { cartas: true, univ: true, pulo: true };
 let dadosJogador = {
     nome: "",
     traje: "Iniciante",
-    conquistas: JSON.parse(localStorage.getItem('showDecadasConquistas')) || { r50: false, r70: false, r90: false }
+    conquistas: { r50: false, r70: false, r90: false }
 };
 
+// CARREGAR DADOS AO ABRIR
 window.onload = () => {
+    const salvo = localStorage.getItem('showDecadasConquistas');
+    if (salvo) {
+        dadosJogador.conquistas = JSON.parse(salvo);
+    }
     atualizarLoja();
 };
 
 function atualizarLoja() {
-    if (dadosJogador.conquistas.r50) document.getElementById('traje-50').disabled = false;
-    if (dadosJogador.conquistas.r70) document.getElementById('traje-70').disabled = false;
-    if (dadosJogador.conquistas.r90) document.getElementById('traje-90').disabled = false;
+    const t50 = document.getElementById('traje-50');
+    const t70 = document.getElementById('traje-70');
+    const t90 = document.getElementById('traje-90');
+    
+    if(t50) t50.disabled = !dadosJogador.conquistas.r50;
+    if(t70) t70.disabled = !dadosJogador.conquistas.r70;
+    if(t90) t90.disabled = !dadosJogador.conquistas.r90;
 }
 
+// FUNÇÃO DO BOTÃO QUE ESTAVA TRAVANDO
 function irParaSelecao() {
-    dadosJogador.nome = document.getElementById('input-nome').value || "Jogador";
-    dadosJogador.traje = document.getElementById('select-traje').value;
+    const inputNome = document.getElementById('input-nome');
+    const selectTraje = document.getElementById('select-traje');
+    
+    if(!inputNome || !selectTraje) return; // Segurança caso o HTML mude
+
+    dadosJogador.nome = inputNome.value.trim() || "Jogador";
+    dadosJogador.traje = selectTraje.value;
     
     document.getElementById('boas-vindas').innerText = `Olá, ${dadosJogador.nome}!`;
     document.getElementById('tela-perfil').style.display = 'none';
@@ -146,7 +163,10 @@ function iniciarJogo(decada) {
     document.getElementById('player-tag').innerText = dadosJogador.nome;
     document.getElementById('traje-tag').innerText = "Traje: " + dadosJogador.traje;
     
-    document.querySelectorAll('.btn-ajuda').forEach(b => b.disabled = false);
+    document.getElementById('btn-cartas').disabled = false;
+    document.getElementById('btn-universitarios').disabled = false;
+    document.getElementById('btn-pular').disabled = false;
+    
     perguntas[decadaSelecionada].sort(() => Math.random() - 0.5);
     
     document.getElementById('tela-selecao').style.display = 'none';
@@ -217,7 +237,7 @@ function ajudaUniversitarios() {
     ajudas.univ = false;
     document.getElementById('btn-universitarios').disabled = true;
     let correta = perguntas[decadaSelecionada][faseAtual].correct;
-    let resp = Math.random() < 0.7 ? perguntas[decadaSelecionada][faseAtual].options[correta] : "Dificil dizer...";
+    let resp = Math.random() < 0.7 ? perguntas[decadaSelecionada][faseAtual].options[correta] : "Difícil dizer...";
     alert("Os Universitários acham que é: " + resp);
 }
 
