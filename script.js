@@ -107,6 +107,7 @@ const DB = {
     ]
 };
 
+// --- ESTADO INICIAL ---
 let save = JSON.parse(localStorage.getItem('show_save_pro')) || {
     moedas: 0, traje: "Iniciante", inventario: ["Iniciante"],
     conquistas: { d50: false, d70: false, d90: false }, placar: []
@@ -133,27 +134,35 @@ function mudarTela(id) {
     if(id === 'tela-stats') renderizarStats();
 }
 
-window.onload = () => {
-    document.getElementById('btn-entrar').onclick = () => {
-        game.nome = document.getElementById('input-nome').value || "Viajante";
-        atualizarUIHeader();
-        document.getElementById('header-perfil').classList.remove('hidden');
-        mudarTela('tela-menu');
-    };
+// --- FUNÇÕES DE INICIALIZAÇÃO ---
+function iniciarSistema() {
+    // BOTÃO ENTRAR
+    const btnEntrar = document.getElementById('btn-entrar');
+    if (btnEntrar) {
+        btnEntrar.onclick = () => {
+            const nomeInput = document.getElementById('input-nome').value;
+            game.nome = nomeInput.trim() || "Viajante";
+            atualizarUIHeader();
+            document.getElementById('header-perfil').classList.remove('hidden');
+            mudarTela('tela-menu');
+        };
+    }
 
+    // BOTÕES DE NAVEGAÇÃO
     document.getElementById('btn-loja').onclick = () => mudarTela('tela-loja');
     document.getElementById('btn-stats').onclick = () => mudarTela('tela-stats');
     document.querySelectorAll('.btn-voltar').forEach(b => b.onclick = () => mudarTela('tela-menu'));
 
+    // SELEÇÃO DE DÉCADA
     document.querySelectorAll('.btn-decada').forEach(btn => {
         btn.onclick = () => {
-            let decadaKey = btn.getAttribute('data-decada');
+            const decadaKey = btn.getAttribute('data-decada');
             game.decada = decadaKey;
             
-            // 1. Clonar e Embaralhar as perguntas
+            // Embaralha Perguntas
             game.perguntasAtuais = shuffle([...DB[decadaKey]]);
             
-            // 2. Embaralhar as OPÇÕES dentro de cada pergunta
+            // Embaralha Opções
             game.perguntasAtuais.forEach(p => {
                 let rCorretaTexto = p.options[p.correct];
                 shuffle(p.options);
@@ -169,42 +178,9 @@ window.onload = () => {
     });
 
     // AJUDAS
-    document.getElementById('ajuda-cartas').onclick = () => {
-        if(!game.ajudas.cartas) return;
-        game.ajudas.cartas = false;
-        document.getElementById('ajuda-cartas').disabled = true;
-        let p = game.perguntasAtuais[game.fase];
-        let btns = document.getElementById('lista-respostas').children;
-        let sumidos = 0;
-        for(let i=0; i<4; i++) {
-            if(i !== p.correct && sumidos < 2) { 
-                btns[i].style.visibility = "hidden"; 
-                sumidos++; 
-            }
-        }
-    };
-
-    document.getElementById('ajuda-univ').onclick = () => {
-        if(!game.ajudas.univ) return;
-        game.ajudas.univ = false;
-        document.getElementById('ajuda-univ').disabled = true;
-        alert("Universitários sugerem a: " + (game.perguntasAtuais[game.fase].correct + 1));
-    };
-
-    document.getElementById('ajuda-pulo').onclick = () => {
-        if(!game.ajudas.pulo) return;
-        game.ajudas.pulo = false;
-        document.getElementById('ajuda-pulo').disabled = true;
-        game.fase++;
-        if(game.fase < game.perguntasAtuais.length) montarPergunta();
-        else finalizarPartida(true);
-    };
-};
-
-function resetAjudas() {
-    document.getElementById('ajuda-cartas').disabled = false;
-    document.getElementById('ajuda-univ').disabled = false;
-    document.getElementById('ajuda-pulo').disabled = false;
+    document.getElementById('ajuda-cartas').onclick = usarCartas;
+    document.getElementById('ajuda-univ').onclick = usarUniv;
+    document.getElementById('ajuda-pulo').onclick = usarPulo;
 }
 
 function montarPergunta() {
@@ -224,10 +200,50 @@ function montarPergunta() {
                 salvarDados();
                 if(game.fase < game.perguntasAtuais.length) montarPergunta();
                 else finalizarPartida(true);
-            } else { alert("Perdeu tudo!"); finalizarPartida(false); }
+            } else { 
+                alert("Errou! Fim de jogo."); 
+                finalizarPartida(false); 
+            }
         };
         lista.appendChild(btn);
     });
+}
+
+function usarCartas() {
+    if(!game.ajudas.cartas) return;
+    game.ajudas.cartas = false;
+    document.getElementById('ajuda-cartas').disabled = true;
+    let p = game.perguntasAtuais[game.fase];
+    let btns = document.getElementById('lista-respostas').children;
+    let sumidos = 0;
+    for(let i=0; i<4; i++) {
+        if(i !== p.correct && sumidos < 2) { 
+            btns[i].style.visibility = "hidden"; 
+            sumidos++; 
+        }
+    }
+}
+
+function usarUniv() {
+    if(!game.ajudas.univ) return;
+    game.ajudas.univ = false;
+    document.getElementById('ajuda-univ').disabled = true;
+    alert("Universitários sugerem a: " + (game.perguntasAtuais[game.fase].correct + 1));
+}
+
+function usarPulo() {
+    if(!game.ajudas.pulo) return;
+    game.ajudas.pulo = false;
+    document.getElementById('ajuda-pulo').disabled = true;
+    game.fase++;
+    if(game.fase < game.perguntasAtuais.length) montarPergunta();
+    else finalizarPartida(true);
+}
+
+function resetAjudas() {
+    document.getElementById('ajuda-cartas').disabled = false;
+    document.getElementById('ajuda-univ').disabled = false;
+    document.getElementById('ajuda-pulo').disabled = false;
 }
 
 function finalizarPartida(venceu) {
@@ -263,9 +279,12 @@ function salvarDados() {
 }
 
 function atualizarUIHeader() {
-    document.getElementById('nome-perfil').innerText = game.nome;
-    document.getElementById('traje-perfil').innerText = "👕 " + save.traje;
-    document.getElementById('saldo-moedas').innerText = save.moedas;
+    const nomeTxt = document.getElementById('nome-perfil');
+    const trajeTxt = document.getElementById('traje-perfil');
+    const saldoTxt = document.getElementById('saldo-moedas');
+    if(nomeTxt) nomeTxt.innerText = game.nome;
+    if(trajeTxt) trajeTxt.innerText = "👕 " + save.traje;
+    if(saldoTxt) saldoTxt.innerText = save.moedas;
 }
 
 function renderizarStats() {
@@ -280,3 +299,6 @@ function renderizarStats() {
         </div>
     `).join('') || "Sem recordes.";
 }
+
+// CHAMA A INICIALIZAÇÃO
+document.addEventListener('DOMContentLoaded', iniciarSistema);
