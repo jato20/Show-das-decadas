@@ -12,7 +12,7 @@ const DB = {
         { q: "Em qual ano começou a construção de Brasília?", options: ["1950", "1956", "1962", "1965"], correct: 1 },
         { q: "Quem cantava 'Banho de Lua'?", options: ["Celly Campello", "Rita Lee", "Elis Regina", "Gretchen"], correct: 0 },
         { q: "Festival icônico de 1969 nos EUA:", options: ["Rock in Rio", "Woodstock", "Coachella", "Lolla"], correct: 1 },
-        { q: "País dividido por um muro em 1961:", options: ["Coreia", "Vietnã", "Alemanha", "Brasil"], correct: 2 },
+        { q: "País dividido por um muro em 1961?", options: ["Coreia", "Vietnã", "Alemanha", "Brasil"], correct: 2 },
         { q: "Primeiro homem no espaço (1961):", options: ["Neil Armstrong", "Yuri Gagarin", "Buzz Aldrin", "Marcos Pontes"], correct: 1 },
         { q: "Desenho de Hanna-Barbera de 1960:", options: ["Os Flintstones", "Ben 10", "Simpsons", "Dragon Ball"], correct: 0 },
         { q: "Onde foi a Copa de 1962?", options: ["Brasil", "Chile", "Inglaterra", "Suécia"], correct: 1 },
@@ -30,10 +30,10 @@ const DB = {
         { q: "Filme 'Psicose' é de qual diretor?", options: ["Hitchcock", "Spielberg", "Kubrick", "Nolan"], correct: 0 },
         { q: "Carro popular lançado em 1953 no BR:", options: ["Fusca", "Opala", "Gol", "Corcel"], correct: 0 },
         { q: "Ano que a TV colorida chegou ao BR:", options: ["1960", "1972", "1950", "1980"], correct: 1 },
-        { q: "Quem descobriu a vacina da poliomielite (1955)?", options: ["Albert Sabin", "Jonas Salk", "Pasteur", "Fleming"], correct: 1 },
-        { q: "O que significa a sigla MPB (surgida nos 60)?", options: ["Música Popular Brasileira", "Música Para Baixar", "Música Pura Brasil", "Música Povo Brasil"], correct: 0 },
+        { q: "Quem descobriu a vacina da pólio?", options: ["Albert Sabin", "Jonas Salk", "Pasteur", "Fleming"], correct: 1 },
+        { q: "O que significa a sigla MPB?", options: ["Música Popular Brasileira", "Música Para Baixar", "Música Pura Brasil", "Música Povo Brasil"], correct: 0 },
         { q: "Qual herói estreou em 1962 na Marvel?", options: ["Homem-Aranha", "Batman", "Superman", "Flash"], correct: 0 },
-        { q: "Onde aconteceu a Copa de 1954?", options: ["Suíça", "Brasil", "México", "Chile"], correct: 0 }
+        { q: "Onde foi a Copa de 1954?", options: ["Suíça", "Brasil", "México", "Chile"], correct: 0 }
     ],
     '7080': [
         { q: "Quem é o Rei do Pop?", options: ["Prince", "Michael Jackson", "Bono", "Freddie Mercury"], correct: 1 },
@@ -62,13 +62,13 @@ const DB = {
         { q: "Console da Nintendo de 1983:", options: ["NES", "Snes", "N64", "Gameboy"], correct: 0 },
         { q: "Ano da queda do Muro de Berlim:", options: ["1987", "1988", "1989", "1990"], correct: 2 },
         { q: "Empresa do Macintosh (1984):", options: ["Apple", "Microsoft", "IBM", "HP"], correct: 0 },
-        { q: "Sucesso de Cyndi Lauper em 83:", options: ["Girls Just Want to Have Fun", "Like a Virgin", "Thriller", "Hello"], correct: 0 },
+        { q: "Sucesso de Cyndi Lauper em 83:", options: ["Girls Just Want Fun", "Like a Virgin", "Thriller", "Hello"], correct: 0 },
         { q: "Herói dono do Castelo de Grayskull:", options: ["He-Man", "Lion-O", "She-Ra", "Zorro"], correct: 0 },
         { q: "Ano da morte de John Lennon:", options: ["1980", "1975", "1985", "1990"], correct: 0 },
-        { q: "Desenho que tinha o mestre dos magos:", options: ["Caverna do Dragão", "He-man", "Thundercats", "Smurfs"], correct: 0 },
-        { q: "Qual banda lançou o disco 'Thriller'?", options: ["Michael Jackson", "Queen", "U2", "AC/DC"], correct: 0 },
+        { q: "Desenho do mestre dos magos:", options: ["Caverna do Dragão", "He-man", "Thundercats", "Smurfs"], correct: 0 },
+        { q: "Qual disco de 82 é o mais vendido?", options: ["Thriller", "Back in Black", "Bad", "U2"], correct: 0 },
         { q: "País sede da Copa de 1982:", options: ["Espanha", "Itália", "México", "Argentina"], correct: 0 },
-        { q: "Filme de Steven Spielberg sobre um ET:", options: ["E.T. O Extraterrestre", "Star Wars", "Contatos Imediatos", "Sinais"], correct: 0 }
+        { q: "Filme de Spielberg sobre um ET:", options: ["E.T.", "Star Wars", "Sinais", "Alien"], correct: 0 }
     ],
     '9000': [
         { q: "Qual bicho virtual era febre nos anos 90?", options: ["Tamagotchi", "Furby", "Pikachu", "Dino"], correct: 0 },
@@ -81,9 +81,9 @@ const DB = {
         { q: "Programa da 'Banheira do Gugu':", options: ["Fantástico", "Domingo Legal", "H", "Caldeirão"], correct: 1 },
         { q: "Console da Sega de 128 bits (1998):", options: ["Saturn", "Dreamcast", "Genesis", "PS2"], correct: 1 },
         { q: "Ano do atentado às Torres Gêmeas:", options: ["1999", "2000", "2001", "2002"], correct: 2 },
-        { q: "Moeda lançada no Brasil em 1994:", options: ["Cruzado", "Cruzeiro Real", "Real", "Peso"], correct: 2 },
+        { q: "Moeda lançada no Brasil em 1994:", options: ["Cruzado", "Cruzeiro", "Real", "Peso"], correct: 2 },
         { q: "Desenho japonês da TV Manchete:", options: ["Cavaleiros do Zodíaco", "Naruto", "Ben 10", "Bob Esponja"], correct: 0 },
-        { q: "Quem venceu a Copa do Mundo de 2002?", options: ["Alemanha", "Brasil", "França", "Itália"], correct: 1 },
+        { q: "Quem venceu a Copa de 2002?", options: ["Alemanha", "Brasil", "França", "Itália"], correct: 1 },
         { q: "Cantora 'Princesinha do Pop' em 2000:", options: ["Madonna", "Britney Spears", "Beyoncé", "Rihanna"], correct: 1 },
         { q: "Brinquedo que girava (febre em 2000):", options: ["BeyBlade", "Pião", "Ioiô", "Lego"], correct: 0 },
         { q: "Desenho da Disney de 1994:", options: ["O Rei Leão", "Frozen", "Moana", "Shrek"], correct: 0 },
@@ -102,34 +102,36 @@ const DB = {
         { q: "Rede de depoimentos do Orkut:", options: ["Scraps", "Testemunhos", "Depoimentos", "Mensagens"], correct: 2 },
         { q: "Qual filme ganhou o Oscar em 1994?", options: ["Forrest Gump", "Pulp Fiction", "Rei Leão", "Speed"], correct: 0 },
         { q: "País que sediou a Copa de 1994:", options: ["EUA", "Brasil", "Itália", "França"], correct: 0 },
-        { q: "Primeiro vencedor do Big Brother Brasil:", options: ["Kleber Bambam", "Rodrigo Cowboy", "Dhomini", "Jean Wyllys"], correct: 0 },
+        { q: "Primeiro vencedor do BBB Brasil:", options: ["Kleber Bambam", "Rodrigo Cowboy", "Dhomini", "Jean Wyllys"], correct: 0 },
         { q: "Ano que o Youtube foi criado:", options: ["2004", "2005", "2006", "2007"], correct: 1 }
     ]
 };
 
-let game = {
-    nome: "", traje: "Iniciante", moedas: 0, decada: "", fase: 0, premio: 0,
-    inventario: ["Iniciante"], ajudas: { cartas: true, univ: true, pulo: true }
+// --- LOGICA DO SISTEMA ---
+let save = JSON.parse(localStorage.getItem('show_save_pro')) || {
+    moedas: 0, traje: "Iniciante", inventario: ["Iniciante"],
+    conquistas: { d50: false, d70: false, d90: false }, placar: []
 };
+
+let game = { nome: "", decada: "", fase: 0, premio: 0, ajudas: { cartas: true, univ: true, pulo: true } };
 
 function mudarTela(id) {
     document.querySelectorAll('.tela').forEach(t => t.classList.remove('active'));
     document.getElementById(id).classList.add('active');
+    if(id === 'tela-stats') renderizarStats();
 }
 
 window.onload = () => {
     document.getElementById('btn-entrar').onclick = () => {
         game.nome = document.getElementById('input-nome').value || "Viajante";
-        document.getElementById('nome-perfil').innerText = game.nome;
+        atualizarUIHeader();
         document.getElementById('header-perfil').classList.remove('hidden');
         mudarTela('tela-menu');
     };
 
     document.getElementById('btn-loja').onclick = () => mudarTela('tela-loja');
-    
-    document.querySelectorAll('.btn-voltar').forEach(btn => {
-        btn.onclick = () => mudarTela('tela-menu');
-    });
+    document.getElementById('btn-stats').onclick = () => mudarTela('tela-stats');
+    document.querySelectorAll('.btn-voltar').forEach(b => b.onclick = () => mudarTela('tela-menu'));
 
     document.querySelectorAll('.btn-decada').forEach(btn => {
         btn.onclick = () => {
@@ -160,7 +162,7 @@ window.onload = () => {
         if(!game.ajudas.univ) return;
         game.ajudas.univ = false;
         document.getElementById('ajuda-univ').disabled = true;
-        alert("Universitários: Achamos que é a " + (DB[game.decada][game.fase].correct + 1));
+        alert("Universitários acham que é a: " + (DB[game.decada][game.fase].correct + 1));
     };
 
     document.getElementById('ajuda-pulo').onclick = () => {
@@ -169,7 +171,7 @@ window.onload = () => {
         document.getElementById('ajuda-pulo').disabled = true;
         game.fase++;
         if(game.fase < DB[game.decada].length) montarPergunta();
-        else { alert("Fim da década!"); mudarTela('tela-menu'); }
+        else finalizarPartida(true);
     };
 };
 
@@ -184,27 +186,63 @@ function montarPergunta() {
         btn.innerText = txt;
         btn.onclick = () => {
             if(i === p.correct) {
-                game.fase++; game.premio += 50000; game.moedas += 150;
-                document.getElementById('saldo-moedas').innerText = game.moedas;
+                game.fase++; game.premio += 50000; save.moedas += 100;
+                salvarDados();
                 if(game.fase < DB[game.decada].length) montarPergunta();
-                else { alert("Você venceu esta década!"); mudarTela('tela-menu'); }
-            } else { alert("Errou!"); mudarTela('tela-menu'); }
+                else finalizarPartida(true);
+            } else { alert("Errou!"); finalizarPartida(false); }
         };
         lista.appendChild(btn);
     });
 }
 
+function finalizarPartida(venceu) {
+    if(venceu) {
+        if(game.decada === '9000') save.conquistas.d90 = true;
+        else if(game.decada === '5060') save.conquistas.d50 = true;
+        else if(game.decada === '7080') save.conquistas.d70 = true;
+        alert("Você completou a década!");
+    }
+    save.placar.push({ nome: game.nome, pontos: game.premio });
+    save.placar.sort((a,b) => b.pontos - a.pontos);
+    save.placar = save.placar.slice(0, 5);
+    salvarDados();
+    mudarTela('tela-menu');
+}
+
 function comprar(nome, preco) {
-    if(game.inventario.includes(nome)) {
-        game.traje = nome;
-        document.getElementById('traje-perfil').innerText = nome;
-        alert("Traje equipado!");
-    } else if(game.moedas >= preco) {
-        game.moedas -= preco;
-        game.inventario.push(nome);
-        game.traje = nome;
-        document.getElementById('saldo-moedas').innerText = game.moedas;
-        document.getElementById('traje-perfil').innerText = nome;
-        alert("Comprado e equipado!");
-    } else { alert("Moedas insuficientes!"); }
+    if(save.inventario.includes(nome)) {
+        save.traje = nome;
+        alert("Equipado!");
+    } else if(save.moedas >= preco) {
+        save.moedas -= preco;
+        save.inventario.push(nome);
+        save.traje = nome;
+        alert("Comprado!");
+    } else alert("Moedas insuficientes!");
+    salvarDados();
+}
+
+function salvarDados() {
+    localStorage.setItem('show_save_pro', JSON.stringify(save));
+    atualizarUIHeader();
+}
+
+function atualizarUIHeader() {
+    document.getElementById('nome-perfil').innerText = game.nome;
+    document.getElementById('traje-perfil').innerText = "👕 " + save.traje;
+    document.getElementById('saldo-moedas').innerText = save.moedas;
+}
+
+function renderizarStats() {
+    document.getElementById('lista-conquistas').innerHTML = `
+        <span class="medalha ${save.conquistas.d50 ? 'ativa' : ''}">🕰️ Anos 50/60</span>
+        <span class="medalha ${save.conquistas.d70 ? 'ativa' : ''}">🌈 Anos 70/80</span>
+        <span class="medalha ${save.conquistas.d90 ? 'ativa' : ''}">🎓 Vc é sabido em!</span>
+    `;
+    document.getElementById('placar-lideres').innerHTML = save.placar.map((p, i) => `
+        <div style="display:flex; justify-content:space-between; border-bottom:1px solid #444; padding: 4px 0;">
+            <span>${i+1}º ${p.nome}</span><span>R$ ${p.pontos.toLocaleString()}</span>
+        </div>
+    `).join('') || "Sem recordes.";
 }
