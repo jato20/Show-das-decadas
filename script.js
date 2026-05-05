@@ -103,15 +103,15 @@ const DB = {
         { q: "Qual filme ganhou o Oscar em 1994?", options: ["Forrest Gump", "Pulp Fiction", "Rei Leão", "Speed"], correct: 0 },
         { q: "País que sediou a Copa de 1994:", options: ["EUA", "Brasil", "Itália", "França"], correct: 0 },
         { q: "Primeiro vencedor do BBB Brasil:", options: ["Kleber Bambam", "Rodrigo Cowboy", "Dhomini", "Jean Wyllys"], correct: 0 },
-        { q: "Ano que o Youtube foi criou em:", options: ["2004", "2005", "2006", "2007"], correct: 1 }
+        { q: "Ano que o Youtube foi criado:", options: ["2004", "2005", "2006", "2007"], correct: 1 }
     ]
 };
 
-// --- DADOS DO JOGADOR ---
+// --- ESTADO DO JOGO ---
 let save = JSON.parse(localStorage.getItem('show_save_pro')) || {
     nome: "Viajante",
-    moedas: 0, 
-    traje: "Iniciante", 
+    moedas: 0,
+    traje: "Iniciante",
     inventario: ["Iniciante"],
     placar: [],
     stats: { jogadas: 0, ganhas: 0, perdidas: 0 }
@@ -119,53 +119,54 @@ let save = JSON.parse(localStorage.getItem('show_save_pro')) || {
 
 let game = { decada: "", fase: 0, premio: 0, ajudas: {}, perguntasAtuais: [] };
 
-function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-}
-
-// --- FUNÇÕES DE PERFIL ---
-function abrirPerfil() {
+// --- FUNÇÕES DE PERFIL (CORRIGIDAS) ---
+window.abrirPerfil = function() {
     document.getElementById('st-jogadas').innerText = save.stats.jogadas;
     document.getElementById('st-ganhas').innerText = save.stats.ganhas;
     document.getElementById('st-perdidas').innerText = save.stats.perdidas;
     document.getElementById('modal-perfil').style.display = 'block';
-}
+};
 
-function fecharPerfil() {
+window.fecharPerfil = function() {
     document.getElementById('modal-perfil').style.display = 'none';
-}
+};
 
-function salvarNome() {
+window.salvarNome = function() {
     const novo = document.getElementById('novo-nome').value;
     if(novo.trim() !== "") {
         save.nome = novo;
         salvarDados();
-        alert("Nome atualizado!");
+        alert("Nome salvo!");
         fecharPerfil();
     }
+};
+
+// --- LOGICA GERAL ---
+function mudarTela(id) {
+    document.querySelectorAll('.tela').forEach(t => t.classList.remove('active'));
+    const target = document.getElementById(id);
+    if(target) target.classList.add('active');
+    if(id === 'tela-stats') renderizarRanking();
 }
 
-// --- LÓGICA DO JOGO ---
+function salvarDados() {
+    localStorage.setItem('show_save_pro', JSON.stringify(save));
+    document.getElementById('nome-perfil').innerText = save.nome;
+    document.getElementById('traje-perfil').innerText = "👕 " + save.traje;
+    document.getElementById('saldo-moedas').innerText = save.moedas;
+}
+
 function iniciarJogo(decada) {
     save.stats.jogadas++;
     game.decada = decada;
-    game.perguntasAtuais = shuffle([...DB[decada]]);
-    game.perguntasAtuais.forEach(p => {
-        let correta = p.options[p.correct];
-        shuffle(p.options);
-        p.correct = p.options.indexOf(correta);
-    });
+    game.perguntasAtuais = [...DB[decada]].sort(() => Math.random() - 0.5);
     game.fase = 0; game.premio = 0;
     game.ajudas = { cartas: true, univ: true, pulo: true };
     
     document.getElementById('ajuda-cartas').disabled = false;
     document.getElementById('ajuda-univ').disabled = false;
     document.getElementById('ajuda-pulo').disabled = false;
-    
+
     mudarTela('tela-pergunta');
     montarPergunta();
     salvarDados();
@@ -184,7 +185,7 @@ function montarPergunta() {
         btn.onclick = () => {
             if(i === p.correct) {
                 game.fase++; game.premio += 50000; save.moedas += 100;
-                if(game.fase < game.perguntasAtuais.length) montarPergunta();
+                if(game.fase < 10 && game.fase < game.perguntasAtuais.length) montarPergunta();
                 else finalizarPartida(true);
             } else finalizarPartida(false);
             salvarDados();
@@ -194,13 +195,8 @@ function montarPergunta() {
 }
 
 function finalizarPartida(venceu) {
-    if(venceu) {
-        save.stats.ganhas++;
-        alert("Vitória Total!");
-    } else {
-        save.stats.perdidas++;
-        alert("Você perdeu!");
-    }
+    if(venceu) { save.stats.ganhas++; alert("VOCÊ GANHOU!"); }
+    else { save.stats.perdidas++; alert("ERROU!"); }
     save.placar.push({ nome: save.nome, pontos: game.premio });
     save.placar.sort((a,b) => b.pontos - a.pontos);
     save.placar = save.placar.slice(0, 5);
@@ -208,35 +204,28 @@ function finalizarPartida(venceu) {
     mudarTela('tela-menu');
 }
 
-// --- AUXILIARES ---
-function mudarTela(id) {
-    document.querySelectorAll('.tela').forEach(t => t.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    if(id === 'tela-stats') renderizarRanking();
-}
-
-function salvarDados() {
-    localStorage.setItem('show_save_pro', JSON.stringify(save));
-    document.getElementById('nome-perfil').innerText = save.nome;
-    document.getElementById('traje-perfil').innerText = "👕 " + save.traje;
-    document.getElementById('saldo-moedas').innerText = save.moedas;
-}
-
 function renderizarRanking() {
     document.getElementById('placar-lideres').innerHTML = save.placar.map(p => 
-        `<div style="display:flex; justify-content:space-between;"><span>${p.nome}</span><span>R$ ${p.pontos.toLocaleString()}</span></div>`
+        `<div style="display:flex; justify-content:space-between; border-bottom:1px solid #444; padding:5px 0;">
+            <span>${p.nome}</span><span>R$ ${p.pontos.toLocaleString()}</span>
+        </div>`
     ).join('') || "Sem recordes.";
 }
 
-// Iniciar cliques
-window.onload = () => {
-    salvarDados(); // Carrega dados iniciais
+// Inicialização
+document.addEventListener('DOMContentLoaded', () => {
+    salvarDados();
     document.querySelectorAll('.btn-decada').forEach(btn => {
         btn.onclick = () => iniciarJogo(btn.getAttribute('data-decada'));
     });
     document.getElementById('btn-loja').onclick = () => mudarTela('tela-loja');
     document.getElementById('btn-stats').onclick = () => mudarTela('tela-stats');
-    document.querySelectorAll('.btn-voltar').forEach(b => b.onclick = () => mudarTela('tela-menu'));
+    document.querySelectorAll('.btn-voltar').forEach(b => {
+        b.onclick = () => {
+            if(b.innerText.includes("Fechar")) fecharPerfil();
+            else mudarTela('tela-menu');
+        };
+    });
 
     // Ajudas
     document.getElementById('ajuda-cartas').onclick = () => {
@@ -247,10 +236,11 @@ window.onload = () => {
     };
     document.getElementById('ajuda-univ').onclick = () => {
         game.ajudas.univ = false; document.getElementById('ajuda-univ').disabled = true;
-        alert("Dica: " + (game.perguntasAtuais[game.fase].correct + 1));
+        alert("Universitários sugerem a opção " + (game.perguntasAtuais[game.fase].correct + 1));
     };
     document.getElementById('ajuda-pulo').onclick = () => {
         game.ajudas.pulo = false; document.getElementById('ajuda-pulo').disabled = true;
-        game.fase++; montarPergunta();
+        game.fase++; 
+        if(game.fase < 10) montarPergunta(); else finalizarPartida(true);
     };
-};
+});
