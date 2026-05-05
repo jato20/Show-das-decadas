@@ -15,20 +15,20 @@ const DB = {
         { q: "País dividido pelo muro em 1961?", options: ["Coreia", "Vietnã", "Alemanha", "Brasil"], correct: 2 },
         { q: "Primeiro homem no espaço (1961):", options: ["Armstrong", "Yuri Gagarin", "Aldrin", "Pontes"], correct: 1 },
         { q: "Onde foi a Copa de 1962?", options: ["Brasil", "Chile", "Inglaterra", "Suécia"], correct: 1 },
-        { q: "Banda britânica de 1963:", options: ["Beatles", "The Who", "Led Zeppelin", "Queen"], correct: 0 },
-        { q: "Rei do Baião:", options: ["Luiz Gonzaga", "Dominguinhos", "Gil", "Caetano"], correct: 0 },
-        { q: "Boneca lançada em 1959:", options: ["Barbie", "Lego", "Max Steel", "Hot Wheels"], correct: 0 },
+        { q: "Banda britânica de 1963?", options: ["Beatles", "The Who", "Led Zeppelin", "Queen"], correct: 0 },
+        { q: "Rei do Baião?", options: ["Luiz Gonzaga", "Dominguinhos", "Gil", "Caetano"], correct: 0 },
+        { q: "Boneca lançada em 1959?", options: ["Barbie", "Lego", "Max Steel", "Hot Wheels"], correct: 0 },
         { q: "Copa de 1950 foi no:", options: ["Brasil", "Uruguai", "Itália", "França"], correct: 0 },
-        { q: "TV inaugurada no BR em 1950:", options: ["Globo", "Record", "Tupi", "SBT"], correct: 2 },
-        { q: "Sucessor de Getúlio em 1954:", options: ["Café Filho", "JK", "Jânio", "Dutra"], correct: 0 },
-        { q: "Guerra que acabou em 1953:", options: ["Coreia", "Fria", "Golfo", "Vietnã"], correct: 0 },
-        { q: "Banda de 'Light My Fire':", options: ["The Doors", "Nirvana", "Green Day", "Oasis"], correct: 0 },
-        { q: "Ano da morte de Kennedy:", options: ["1961", "1962", "1963", "1964"], correct: 2 },
-        { q: "Diretor de 'Psicose':", options: ["Hitchcock", "Spielberg", "Kubrick", "Nolan"], correct: 0 },
-        { q: "Carro de 1953 no BR:", options: ["Fusca", "Opala", "Gol", "Corcel"], correct: 0 },
+        { q: "TV inaugurada no BR em 1950?", options: ["Globo", "Record", "Tupi", "SBT"], correct: 2 },
+        { q: "Sucessor de Getúlio em 1954?", options: ["Café Filho", "JK", "Jânio", "Dutra"], correct: 0 },
+        { q: "Guerra que acabou em 1953?", options: ["Coreia", "Fria", "Golfo", "Vietnã"], correct: 0 },
+        { q: "Banda de 'Light My Fire'?", options: ["The Doors", "Nirvana", "Green Day", "Oasis"], correct: 0 },
+        { q: "Ano da morte de Kennedy?", options: ["1961", "1962", "1963", "1964"], correct: 2 },
+        { q: "Diretor de 'Psicose'?", options: ["Hitchcock", "Spielberg", "Kubrick", "Nolan"], correct: 0 },
+        { q: "Carro de 1953 no BR?", options: ["Fusca", "Opala", "Gol", "Corcel"], correct: 0 },
         { q: "TV colorida no BR chegou em:", options: ["1960", "1972", "1950", "1980"], correct: 1 },
         { q: "Vacina da pólio foi de:", options: ["Sabin", "Salk", "Pasteur", "Fleming"], correct: 1 },
-        { q: "Herói da Marvel de 1962:", options: ["Homem-Aranha", "Batman", "Superman", "Flash"], correct: 0 },
+        { q: "Herói da Marvel de 1962?", options: ["Homem-Aranha", "Batman", "Superman", "Flash"], correct: 0 },
         { q: "Copa de 1954 foi na:", options: ["Suíça", "Brasil", "México", "Chile"], correct: 0 },
         { q: "Guerra do Vietnã começou em:", options: ["1945", "1955", "1965", "1975"], correct: 1 },
         { q: "Lançamento da Bossa Nova:", options: ["1950", "1958", "1964", "1970"], correct: 1 },
@@ -107,12 +107,15 @@ const DB = {
     ]
 };
 
+// --- DADOS SALVOS ---
 let save = JSON.parse(localStorage.getItem('show_save_pro')) || {
-    nome: "Viajante", moedas: 0, placar: [], stats: { jogadas: 0, ganhas: 0, perdidas: 0 }
+    nome: "Viajante", moedas: 0, traje: "Iniciante", inventario: ["Iniciante"],
+    placar: [], stats: { jogadas: 0, ganhas: 0, perdidas: 0 }
 };
 
 let game = { decada: "", fase: 0, premio: 0, perguntasAtuais: [] };
 
+// --- TROCA DE TELA ---
 function mudarTela(id) {
     document.querySelectorAll('.tela').forEach(t => t.classList.remove('active'));
     document.getElementById(id).classList.add('active');
@@ -124,13 +127,16 @@ function mudarTela(id) {
     }
 }
 
-window.salvarNome = function() {
-    const n = document.getElementById('novo-nome').value.trim();
-    if(n) { 
-        save.nome = n; 
-        salvarDados(); 
-        alert("Nome salvo!"); 
-        mudarTela('tela-menu');
+// --- SISTEMA DE NOME NO MENU ---
+window.salvarNomeMenu = function() {
+    const novoNome = document.getElementById('menu-nome').value.trim();
+    if(novoNome) {
+        save.nome = novoNome;
+        salvarDados();
+        alert("Nome registrado com sucesso!");
+        document.getElementById('menu-nome').value = ""; // Limpa campo
+    } else {
+        alert("Digite um nome válido!");
     }
 };
 
@@ -140,13 +146,13 @@ function salvarDados() {
     document.getElementById('saldo-moedas').innerText = save.moedas;
 }
 
+// --- LÓGICA DO JOGO ---
 function iniciarJogo(decada) {
-    if(!DB[decada]) return;
     save.stats.jogadas++;
     game.decada = decada;
+    // Pega 10 aleatórias da década
     game.perguntasAtuais = [...DB[decada]].sort(() => Math.random() - 0.5).slice(0, 10);
-    game.fase = 0; 
-    game.premio = 0;
+    game.fase = 0; game.premio = 0;
     mudarTela('tela-pergunta');
     montarPergunta();
     salvarDados();
@@ -182,9 +188,18 @@ function finalizarPartida(venceu) {
     mudarTela('tela-menu');
 }
 
+window.comprar = function(nome, preco) {
+    if(save.inventario.includes(nome)) { alert("Traje " + nome + " selecionado!"); }
+    else if(save.moedas >= preco) {
+        save.moedas -= preco; save.inventario.push(nome);
+        alert("Comprado!");
+    } else alert("Sem moedas!");
+    salvarDados();
+}
+
 function renderizarRanking() {
     document.getElementById('placar-lideres').innerHTML = save.placar.map(p => 
-        `<div style="display:flex; justify-content:space-between; border-bottom:1px solid #444; padding:5px 0;">
+        `<div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #444;">
             <span>${p.nome}</span><span>R$ ${p.pontos.toLocaleString()}</span>
         </div>`
     ).join('') || "Sem recordes.";
@@ -192,14 +207,8 @@ function renderizarRanking() {
 
 document.addEventListener('DOMContentLoaded', () => {
     salvarDados();
-    // Ativação dos botões de década
-    document.querySelectorAll('.btn-decada').forEach(b => {
-        b.onclick = () => iniciarJogo(b.dataset.decada);
-    });
-    // Ativação dos botões de navegação
+    document.querySelectorAll('.btn-decada').forEach(b => b.onclick = () => iniciarJogo(b.dataset.decada));
     document.getElementById('btn-loja').onclick = () => mudarTela('tela-loja');
     document.getElementById('btn-stats').onclick = () => mudarTela('tela-stats');
-    document.querySelectorAll('.btn-voltar').forEach(b => {
-        b.onclick = () => mudarTela('tela-menu');
-    });
+    document.querySelectorAll('.btn-voltar').forEach(b => b.onclick = () => mudarTela('tela-menu'));
 });
