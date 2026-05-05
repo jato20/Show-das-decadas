@@ -1,24 +1,219 @@
-body { margin: 0; background: #000839; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-#game-container { width: 350px; background: #001580; border: 4px solid #ffd700; border-radius: 20px; padding: 25px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-.tela { display: none; }
-.active { display: block; }
-.hidden { display: none !important; }
+/* --- RESET E CORES --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-#header-perfil { display: flex; justify-content: space-between; background: rgba(0,0,0,0.6); padding: 12px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #ffd700; font-size: 13px; font-weight: bold; }
+body {
+    background-color: #000830;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
 
-input { width: 90%; padding: 15px; margin-bottom: 15px; border-radius: 8px; border: none; font-size: 16px; }
-button { width: 100%; padding: 14px; margin: 6px 0; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; background: #ffd700; color: #000; transition: transform 0.1s; }
-button:active { transform: scale(0.96); }
+#game-container {
+    width: 100%;
+    max-width: 400px;
+    background: #001580;
+    border: 4px solid #ffd700;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+}
 
-.box-stats { background: rgba(0,0,0,0.4); padding: 12px; border-radius: 10px; margin-bottom: 15px; text-align: left; min-height: 50px; }
-.medalha { display: inline-block; padding: 5px 10px; margin: 4px; border-radius: 15px; background: #222; color: #555; font-size: 11px; }
-.medalha.ativa { background: #ffd700; color: #000; box-shadow: 0 0 10px #ffd700; font-weight: bold; }
+/* --- CABEÇALHO / PERFIL --- */
+#header-perfil {
+    background: linear-gradient(to bottom, #001fcc, #001580);
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ffd700;
+    cursor: pointer;
+    transition: background 0.3s;
+}
 
-.status-jogo { background: #000; padding: 15px; border-radius: 12px; color: #00ff00; font-size: 1.6em; margin-bottom: 15px; border: 2px solid #004400; }
-.controles-ajuda { display: flex; gap: 8px; margin-bottom: 10px; }
-.controles-ajuda button { background: #333; color: #fff; font-size: 10px; padding: 8px; }
-.btn-voltar { background: #555; color: white; margin-top: 15px; }
+#header-perfil:hover {
+    background: #0026ff;
+}
 
-.item-loja { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-.item-loja p { margin: 0; font-size: 12px; }
-.item-loja button { width: auto; padding: 5px 10px; font-size: 10px; }
+.user-data #nome-perfil {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #ffd700;
+}
+
+.moedas-total {
+    background: rgba(0,0,0,0.3);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    color: #ffd700;
+    border: 1px solid #ffd700;
+}
+
+/* --- TELAS --- */
+.tela {
+    display: none;
+    padding: 20px;
+    text-align: center;
+    animation: fadeIn 0.4s ease;
+}
+
+.tela.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px #000;
+    color: #ffd700;
+}
+
+/* --- BOTÕES --- */
+button {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(to bottom, #ffd700, #b8860b);
+    color: #000;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.2s;
+}
+
+button:hover {
+    filter: brightness(1.2);
+    transform: scale(1.02);
+}
+
+button:disabled {
+    filter: grayscale(1);
+    cursor: not-allowed;
+}
+
+.btn-voltar {
+    background: #555;
+    color: white;
+    margin-top: 20px;
+}
+
+/* --- MODAL DE PERFIL --- */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 99;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.85);
+}
+
+.modal-content {
+    background: #001580;
+    margin: 15% auto;
+    padding: 25px;
+    border: 3px solid #ffd700;
+    width: 85%;
+    max-width: 350px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+#stats-detalhado {
+    margin: 15px 0;
+    padding: 10px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    text-align: left;
+}
+
+#stats-detalhado p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: none;
+}
+
+/* --- JOGO (PERGUNTAS) --- */
+.status-jogo {
+    font-size: 1.5rem;
+    color: #00ff00;
+    margin-bottom: 15px;
+}
+
+#txt-pergunta {
+    margin-bottom: 20px;
+    min-height: 60px;
+    font-size: 1.1rem;
+}
+
+#lista-respostas button {
+    background: linear-gradient(to bottom, #1e90ff, #00008b);
+    color: white;
+    border: 1px solid #1e90ff;
+    text-align: left;
+    padding-left: 20px;
+}
+
+.controles-ajuda {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 5px;
+    margin: 15px 0;
+}
+
+.controles-ajuda button {
+    font-size: 0.8rem;
+    padding: 8px;
+    background: #28a745;
+    color: white;
+}
+
+/* --- LOJA E RANKING --- */
+.item-loja {
+    background: rgba(255,255,255,0.1);
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.item-loja p { font-size: 0.9rem; }
+.item-loja button { width: auto; padding: 5px 10px; margin: 0; }
+
+.box-stats {
+    background: rgba(0,0,0,0.3);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: left;
+}
+
+hr {
+    margin: 15px 0;
+    border: 0;
+    border-top: 1px solid rgba(255,215,0,0.3);
+}
