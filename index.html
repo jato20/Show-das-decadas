@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Show das Décadas - Pro</title>
+    <title>Show das Décadas</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -20,12 +20,12 @@
                     <option value="Cyber Hacker" id="traje-90" disabled>🕶️ Anos 90 (Bloqueado)</option>
                 </select>
             </div>
-            <button class="btn-inicio" onclick="irParaSelecao()">Salvar e Continuar</button>
+            <button onclick="irParaSelecao()">Salvar e Continuar</button>
         </div>
 
         <div id="tela-selecao" style="display:none;">
-            <p id="boas-vindas"></p>
-            <h2>Escolha a Década:</h2>
+            <h2 id="boas-vindas"></h2>
+            <p>Escolha uma década:</p>
             <button onclick="iniciarJogo('5060')">Anos 50 e 60</button>
             <button onclick="iniciarJogo('7080')">Anos 70 e 80</button>
             <button onclick="iniciarJogo('9000')">Anos 90 e 00</button>
@@ -33,13 +33,13 @@
 
         <div id="tela-pergunta" style="display:none;">
             <div id="status-topo">
-                <div>
-                    <span id="player-tag"></span><br>
-                    <small id="traje-tag"></small>
+                <div id="info-player">
+                    <b id="display-nome"></b><br>
+                    <small id="display-traje"></small>
                 </div>
                 <div class="dinheiro">R$ <span id="valor-premio">0</span></div>
             </div>
-            <h2 id="pergunta-texto">Carregando...</h2>
+            <h2 id="pergunta-texto"></h2>
             <div id="alternativas"></div>
             <div id="ajudas">
                 <button id="btn-cartas" class="btn-ajuda" onclick="ajudaCartas()">🃏 Cartas</button>
