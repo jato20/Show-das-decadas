@@ -8,7 +8,7 @@ const DB = {
         { q: "Presidente do Brasil que criou a frase '50 anos em 5':", options: ["Vargas", "Jânio", "JK", "Castelo Branco"], correct: 2 },
         { q: "Qual satélite a URSS lançou em 1957?", options: ["Apollo", "Sputnik", "Explorer", "Sojuz"], correct: 1 },
         { q: "A 'Jovem Guarda' foi um movimento de qual década?", options: ["Anos 40", "Anos 50", "Anos 60", "Anos 70"], correct: 2 },
-        { q: "Atriz ícone de beleza dos anos 50:", options: ["Marilyn Monroe", "Madonna", "Cher", "Julia Roberts"], correct: 0 },
+        { q: "Atriz ícone de beleza dos anos 50?", options: ["Marilyn Monroe", "Madonna", "Cher", "Julia Roberts"], correct: 0 },
         { q: "Qual destes foi um carro famoso dos anos 60?", options: ["Fusca", "Onix", "Civic", "Tesla"], correct: 0 },
         { q: "Em qual ano começou a construção de Brasília?", options: ["1950", "1956", "1962", "1965"], correct: 1 },
         { q: "Quem cantava 'Banho de Lua'?", options: ["Celly Campello", "Rita Lee", "Elis Regina", "Gretchen"], correct: 0 },
@@ -113,55 +113,31 @@ let game = {
     conquistas: JSON.parse(localStorage.getItem('show_save')) || {r50:false, r70:false, r90:false}
 };
 
+// --- FUNÇÕES DE NAVEGAÇÃO ---
 function mudarTela(id) {
     document.querySelectorAll('.tela').forEach(t => t.classList.remove('active'));
     document.getElementById(id).classList.add('active');
 }
 
-// Inicialização
-window.onload = () => {
-    // Carregar conquistas
-    if(game.conquistas.r50) document.getElementById('traje-50').disabled = false;
-    if(game.conquistas.r70) document.getElementById('traje-70').disabled = false;
-    if(game.conquistas.r90) document.getElementById('traje-90').disabled = false;
-
-    // Botão Salvar
-    document.getElementById('btn-salvar').onclick = () => {
-        game.nome = document.getElementById('input-nome').value || "Jogador";
-        game.traje = document.getElementById('select-traje').value;
-        document.getElementById('boas-vindas').innerText = `Bem-vindo, ${game.nome}!`;
-        mudarTela('tela-selecao');
-    };
-
-    // Seleção de Década
-    document.querySelectorAll('.btn-decada').forEach(btn => {
-        btn.onclick = () => {
-            game.decada = btn.getAttribute('data-decada');
-            iniciarPartida();
-        };
-    });
-
-    // Ajudas
-    document.getElementById('ajuda-cartas').onclick = usarCartas;
-    document.getElementById('ajuda-univ').onclick = usarUniv;
-    document.getElementById('ajuda-pulo').onclick = usarPulo;
-};
-
-function iniciarPartida() {
+// --- CONTROLE DE JOGO ---
+function iniciarPartida(decadaEscolhida) {
+    game.decada = decadaEscolhida;
     game.fase = 0;
     game.premio = 0;
     game.ajudas = { cartas: true, univ: true, pulo: true };
     
+    // Aplicar estilo visual
     document.getElementById('game-container').className = "bg-" + game.decada;
     document.getElementById('nome-p').innerText = game.nome;
     document.getElementById('traje-p').innerText = game.traje;
     
+    // Resetar botões de ajuda
     document.getElementById('ajuda-cartas').disabled = false;
     document.getElementById('ajuda-univ').disabled = false;
     document.getElementById('ajuda-pulo').disabled = false;
 
     mudarTela('tela-pergunta');
-    DB[game.decada].sort(() => Math.random() - 0.5);
+    DB[game.decada].sort(() => Math.random() - 0.5); // Embaralha perguntas
     montarPergunta();
 }
 
@@ -176,7 +152,6 @@ function montarPergunta() {
     p.options.forEach((txt, i) => {
         const btn = document.createElement('button');
         btn.innerText = txt;
-        btn.id = "opt-" + i;
         btn.onclick = () => validar(i);
         lista.appendChild(btn);
     });
@@ -207,18 +182,20 @@ function ganhouTudo() {
     location.reload();
 }
 
+// --- AJUDAS ---
 function usarCartas() {
     if(!game.ajudas.cartas) return;
     game.ajudas.cartas = false;
     document.getElementById('ajuda-cartas').disabled = true;
     let correta = DB[game.decada][game.fase].correct;
+    let botoes = document.getElementById('lista-respostas').children;
     let sumidos = 0;
-    [0,1,2,3].forEach(i => {
+    for(let i=0; i<4; i++){
         if(i !== correta && sumidos < 2) {
-            document.getElementById("opt-"+i).style.visibility = "hidden";
+            botoes[i].style.visibility = "hidden";
             sumidos++;
         }
-    });
+    }
 }
 
 function usarUniv() {
@@ -226,7 +203,7 @@ function usarUniv() {
     game.ajudas.univ = false;
     document.getElementById('ajuda-univ').disabled = true;
     let correta = DB[game.decada][game.fase].correct;
-    alert("DICA: Os universitários acham que a certa é: " + DB[game.decada][game.fase].options[correta]);
+    alert("DICA: Eles acham que é: " + DB[game.decada][game.fase].options[correta]);
 }
 
 function usarPulo() {
@@ -237,3 +214,32 @@ function usarPulo() {
     if(game.fase < DB[game.decada].length) montarPergunta();
     else ganhouTudo();
 }
+
+// --- INICIALIZAÇÃO DE EVENTOS ---
+window.addEventListener('DOMContentLoaded', () => {
+    // Carregar conquistas
+    if(game.conquistas.r50) document.getElementById('traje-50').disabled = false;
+    if(game.conquistas.r70) document.getElementById('traje-70').disabled = false;
+    if(game.conquistas.r90) document.getElementById('traje-90').disabled = false;
+
+    // Botão Salvar
+    document.getElementById('btn-salvar').onclick = () => {
+        game.nome = document.getElementById('input-nome').value || "Jogador";
+        game.traje = document.getElementById('select-traje').value;
+        document.getElementById('boas-vindas').innerText = `Olá, ${game.nome}!`;
+        mudarTela('tela-selecao');
+    };
+
+    // Botões de Década (Corrigindo o bug de clique)
+    document.querySelectorAll('.btn-decada').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const decada = this.getAttribute('data-decada');
+            iniciarPartida(decada);
+        });
+    });
+
+    // Eventos de ajuda
+    document.getElementById('ajuda-cartas').onclick = usarCartas;
+    document.getElementById('ajuda-univ').onclick = usarUniv;
+    document.getElementById('ajuda-pulo').onclick = usarPulo;
+});
